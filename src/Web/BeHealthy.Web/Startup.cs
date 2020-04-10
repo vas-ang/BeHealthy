@@ -8,7 +8,6 @@
     using BeHealthy.Data.Models;
     using BeHealthy.Data.Repositories;
     using BeHealthy.Data.Seeding;
-    using BeHealthy.Services.Data;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
     using BeHealthy.Web.ViewModels;
@@ -58,7 +57,6 @@
 
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

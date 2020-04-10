@@ -1,5 +1,4 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace BeHealthy.Data.Models
+﻿namespace BeHealthy.Data.Models
 {
     using System;
 

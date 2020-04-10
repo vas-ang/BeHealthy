@@ -28,6 +28,14 @@
                 .HasForeignKey(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            appUser
+                .Property(e => e.FirstName)
+                .IsRequired(true);
+
+            appUser
+                .Property(e => e.LastName)
+                .IsRequired(true);
         }
     }
 }

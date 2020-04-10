@@ -1,5 +1,4 @@
-﻿// ReSharper disable VirtualMemberCallInConstructor
-namespace BeHealthy.Data.Models
+﻿namespace BeHealthy.Data.Models
 {
     using System;
     using System.Collections.Generic;
@@ -16,14 +15,20 @@ namespace BeHealthy.Data.Models
             this.Roles = new HashSet<IdentityUserRole<string>>();
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
+            this.CreatedExercises = new HashSet<Exercise>();
+            this.ExerciseReviews = new HashSet<ExerciseReview>();
         }
 
-        // Audit info
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string ProfilePicture { get; set; }
+
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
 
-        // Deletable entity
         public bool IsDeleted { get; set; }
 
         public DateTime? DeletedOn { get; set; }
@@ -33,5 +38,9 @@ namespace BeHealthy.Data.Models
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
 
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+
+        public virtual ICollection<Exercise> CreatedExercises { get; set; }
+
+        public virtual ICollection<ExerciseReview> ExerciseReviews { get; set; }
     }
 }

@@ -24,7 +24,15 @@
         {
         }
 
-        public DbSet<Setting> Settings { get; set; }
+        public DbSet<Exercise> Exercises { get; set; }
+
+        public DbSet<ExerciseReview> ExerciseReviews { get; set; }
+
+        public DbSet<ExerciseStep> ExerciseSteps { get; set; }
+
+        public DbSet<ExerciseTag> ExerciseTags { get; set; }
+
+        public DbSet<Tag> Tags { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
 
