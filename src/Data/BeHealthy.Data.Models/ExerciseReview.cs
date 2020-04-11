@@ -1,7 +1,5 @@
 ﻿namespace BeHealthy.Data.Models
 {
-    using BeHealthy.Data.Common.Models;
-
     using BeHealthy.Data.Models.Enumerators;
 
     public class ExerciseReview
