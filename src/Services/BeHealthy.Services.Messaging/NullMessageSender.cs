@@ -1,17 +1,12 @@
 ﻿namespace BeHealthy.Services.Messaging
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Identity.UI.Services;
 
     public class NullMessageSender : IEmailSender
     {
-        public Task SendEmailAsync(
-            string from,
-            string fromName,
-            string to,
-            string subject,
-            string htmlContent,
-            IEnumerable<EmailAttachment> attachments = null)
+        public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             return Task.CompletedTask;
         }

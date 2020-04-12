@@ -15,6 +15,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity.UI.Services;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -56,7 +57,8 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
+            var sendGridSection = this.configuration.GetSection("SendGrid");
+            services.AddTransient<IEmailSender, SendGridEmailSender>(x => new SendGridEmailSender(sendGridSection["ApiKey"], sendGridSection["SenderEmail"], sendGridSection["SenderName"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
