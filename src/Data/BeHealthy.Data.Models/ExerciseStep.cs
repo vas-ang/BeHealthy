@@ -12,7 +12,7 @@
 
         public int OrderNumber { get; set; }
 
-        public int ExerciseId { get; set; }
+        public string ExerciseId { get; set; }
 
         public virtual Exercise Exercise { get; set; }
     }

@@ -31,5 +31,8 @@
 
             return source.ProjectTo<TDestination>(AutoMapperConfig.MapperInstance.ConfigurationProvider, parameters);
         }
+
+        public static TDestination To<TDestination>(this object source)
+            => AutoMapperConfig.MapperInstance.Map<TDestination>(source);
     }
 }

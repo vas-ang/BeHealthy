@@ -1,4 +1,4 @@
-﻿namespace BeHealthy.Web.ViewModels.Administration.Dashboard
+﻿namespace BeHealthy.Web.Dtos.Administration.Dashboard.ViewModels
 {
     public class IndexViewModel
     {

@@ -11,6 +11,10 @@
             exStep
                 .Property(e => e.Description)
                 .IsRequired(true);
+
+            exStep
+                .Property(e => e.ExerciseId)
+                .IsRequired(true);
         }
     }
 }

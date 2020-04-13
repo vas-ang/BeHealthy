@@ -1,0 +1,6 @@
+﻿@if (this.User.Identity.IsAuthenticated)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Fitness" asp-controller="Exercises" asp-action="Browse">Exercises</a>
+    </li>
+}

@@ -1,0 +1,18 @@
+﻿@model BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels.ExerciseEditViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h2>Post name: @Model.Name</h2>
+<h3>Post description: @Model.Description</h3>
+
+<h4>Steps</h4>
+@foreach (var item in Model.ExerciseSteps)
+{
+    <h5>@item.Heading</h5>
+    <h6>@item.Image</h6>
+    <h6>@item.Description</h6>
+}

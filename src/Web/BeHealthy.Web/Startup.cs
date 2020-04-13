@@ -8,10 +8,12 @@
     using BeHealthy.Data.Models;
     using BeHealthy.Data.Repositories;
     using BeHealthy.Data.Seeding;
+    using BeHealthy.Services.Cloudinary;
+    using BeHealthy.Services.Data;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
     using BeHealthy.Web.ViewModels;
-
+    using CloudinaryDotNet;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
@@ -58,7 +60,20 @@
 
             // Application services
             var sendGridSection = this.configuration.GetSection("SendGrid");
-            services.AddTransient<IEmailSender, SendGridEmailSender>(x => new SendGridEmailSender(sendGridSection["ApiKey"], sendGridSection["SenderEmail"], sendGridSection["SenderName"]));
+            var sendGridEmailSender = new SendGridEmailSender(sendGridSection["ApiKey"], sendGridSection["SenderEmail"], sendGridSection["SenderName"]);
+            services.AddTransient<IEmailSender, SendGridEmailSender>(x => sendGridEmailSender);
+            services.AddTransient<IExerciseService, ExerciseService>();
+
+            var cloudinarySection = this.configuration.GetSection("Cloudinary");
+            var account = new Account
+            {
+                Cloud = cloudinarySection["CloudName"],
+                ApiKey = cloudinarySection["ApiKey"],
+                ApiSecret = cloudinarySection["ApiSecret"],
+            };
+            var cloudinary = new Cloudinary(account);
+            services.AddSingleton(cloudinary);
+            services.AddTransient<ICloudinaryService, CloudinaryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
