@@ -10,8 +10,6 @@
 
         public string Description { get; set; }
 
-        public int OrderNumber { get; set; }
-
         public string ExerciseId { get; set; }
 
         public virtual Exercise Exercise { get; set; }

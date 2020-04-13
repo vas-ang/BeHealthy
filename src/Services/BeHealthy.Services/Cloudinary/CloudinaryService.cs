@@ -18,13 +18,18 @@
 
         public async Task<string> UploadImageAsync(string name, string folder, IFormFile image)
         {
-            using MemoryStream memoryStream = new MemoryStream();
-            await image.CopyToAsync(memoryStream);
+            using var stream = image.OpenReadStream();
 
-            ImageUploadParams imageParameters = new ImageUploadParams { Folder = folder, File = new FileDescription(name, memoryStream) };
-            var imageUploadedResult = await this.cloudinary.UploadAsync(imageParameters);
+            ImageUploadParams uploadParams = new ImageUploadParams
+            {
+                Folder = folder,
+                Transformation = new Transformation().Crop("limit").Width(800).Height(600),
+                File = new FileDescription(name, stream),
+            };
 
-            return imageUploadedResult.SecureUri.AbsoluteUri;
+            UploadResult uploadResult = await this.cloudinary.UploadAsync(uploadParams);
+
+            return uploadResult.SecureUri.AbsoluteUri;
         }
     }
 }

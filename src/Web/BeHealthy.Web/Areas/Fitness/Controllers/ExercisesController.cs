@@ -4,7 +4,6 @@
 
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Data;
-    using BeHealthy.Web.Controllers;
     using BeHealthy.Web.Dtos.Fitness.Exercises.InputModels;
     using BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels;
     using Microsoft.AspNetCore.Authorization;
@@ -13,7 +12,7 @@
 
     [Authorize]
     [Area("Fitness")]
-    public class ExercisesController : BaseController
+    public class ExercisesController : Controller
     {
         private readonly IExerciseService exerciseService;
         private readonly UserManager<ApplicationUser> userManager;
@@ -24,6 +23,7 @@
             this.userManager = userManager;
         }
 
+        [HttpGet("/{area}/{controller}/")]
         public IActionResult Browse()
         {
             return this.View();
@@ -49,11 +49,24 @@
             return this.RedirectToAction(nameof(this.Edit), new { exerciseId });
         }
 
-        public IActionResult Edit(string exerciseId)
+        public async Task<IActionResult> Edit(string exerciseId)
         {
-            var exerciseEditViewModel = this.exerciseService.GetExercise<ExerciseEditViewModel>(exerciseId);
+            var accessorId = this.userManager.GetUserId(this.User);
+
+            // If user is not the creator of the exercise cannot access that page.
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId))
+            {
+                return this.RedirectToAction(nameof(this.Browse));
+            }
+
+            var exerciseEditViewModel = await this.exerciseService.GetExerciseAsync<ExerciseEditViewModel>(exerciseId);
 
             return this.View(exerciseEditViewModel);
+        }
+
+        public IActionResult Publish()
+        {
+            return this.RedirectToAction(nameof(this.Details));
         }
 
         public IActionResult Details(string exerciseId)

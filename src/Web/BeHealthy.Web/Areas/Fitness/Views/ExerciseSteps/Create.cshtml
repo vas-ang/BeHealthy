@@ -1,0 +1,30 @@
+﻿@model BeHealthy.Web.Dtos.Fitness.ExerciseSteps.InputModels.ExerciseStepInputModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<form asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Create" method="post" enctype="multipart/form-data">
+    <h1>Create an Exercise Step</h1>
+    <hr />
+    <div class="form-group">
+        <label asp-for="@Model.Heading"></label>
+        <input asp-for="@Model.Heading" class="form-control" />
+        <span asp-validation-for="@Model.Heading" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.ImageUpload"></label>
+        <input asp-for="@Model.ImageUpload" class="form-control" />
+        <span asp-validation-for="@Model.ImageUpload" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="@Model.Description"></label>
+        <input asp-for="@Model.Description" class="form-control" />
+        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+    </div>
+
+    <input asp-for="@Model.ExerciseId" value="@TempData["ExerciseId"]" hidden>
+
+    <button type="submit" class="btn btn-primary float-left mx-2">Create</button>
+    <a class="btn btn-danger float-right mx-2" asp-area="Fitness" asp-controller="Exercises" asp-action="Edit" asp-route-exerciseId="@TempData["ExerciseId"]">Cancel</a>
+</form>

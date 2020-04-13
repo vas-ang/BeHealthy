@@ -16,3 +16,8 @@
     <h6>@item.Image</h6>
     <h6>@item.Description</h6>
 }
+
+<a class="btn btn-primary" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Create" asp-route-exerciseId="@Model.Id">Add Exercise Step</a>
+
+<label for="tags">Tags</label>
+<textarea id="tags" disabled></textarea>

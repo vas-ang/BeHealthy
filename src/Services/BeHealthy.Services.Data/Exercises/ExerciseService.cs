@@ -6,6 +6,7 @@
     using BeHealthy.Data.Common.Repositories;
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Mapping;
+    using Microsoft.EntityFrameworkCore;
 
     public class ExerciseService : IExerciseService
     {
@@ -29,7 +30,10 @@
             return exercise.Id;
         }
 
-        public T GetExercise<T>(string exerciseId)
-            => this.exerciseRepository.All().Where(x => !x.IsDeleted).To<T>().FirstOrDefault();
+        public async Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId)
+            => (await this.exerciseRepository.All().FirstOrDefaultAsync(x => !x.IsDeleted && x.Id == exerciseId))?.CreatorId == userId;
+
+        public async Task<T> GetExerciseAsync<T>(string exerciseId)
+            => await this.exerciseRepository.All().Where(x => !x.IsDeleted && x.Id == exerciseId).To<T>().FirstOrDefaultAsync();
     }
 }

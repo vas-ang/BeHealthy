@@ -10,9 +10,10 @@
     using BeHealthy.Data.Seeding;
     using BeHealthy.Services.Cloudinary;
     using BeHealthy.Services.Data;
+    using BeHealthy.Services.Data.ExerciseSteps;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
-    using BeHealthy.Web.ViewModels;
+    using BeHealthy.Web.Dtos;
     using CloudinaryDotNet;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -59,17 +60,17 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            var sendGridSection = this.configuration.GetSection("SendGrid");
-            var sendGridEmailSender = new SendGridEmailSender(sendGridSection["ApiKey"], sendGridSection["SenderEmail"], sendGridSection["SenderName"]);
-            services.AddTransient<IEmailSender, SendGridEmailSender>(x => sendGridEmailSender);
             services.AddTransient<IExerciseService, ExerciseService>();
+            services.AddTransient<IExerciseStepService, ExerciseStepService>();
 
-            var cloudinarySection = this.configuration.GetSection("Cloudinary");
+            var sendGridEmailSender = new SendGridEmailSender(this.configuration["SendGrid:ApiKey"], this.configuration["SendGrid:SenderEmail"], this.configuration["SendGrid:SenderName"]);
+            services.AddTransient<IEmailSender, SendGridEmailSender>(x => sendGridEmailSender);
+
             var account = new Account
             {
-                Cloud = cloudinarySection["CloudName"],
-                ApiKey = cloudinarySection["ApiKey"],
-                ApiSecret = cloudinarySection["ApiSecret"],
+                Cloud = this.configuration["Cloudinary:CloudName"],
+                ApiKey = this.configuration["Cloudinary:ApiKey"],
+                ApiSecret = this.configuration["Cloudinary:ApiSecret"],
             };
             var cloudinary = new Cloudinary(account);
             services.AddSingleton(cloudinary);

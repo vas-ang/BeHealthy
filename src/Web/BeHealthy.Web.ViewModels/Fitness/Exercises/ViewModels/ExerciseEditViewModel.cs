@@ -7,10 +7,12 @@
 
     public class ExerciseEditViewModel : IMapFrom<Exercise>
     {
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
 
-        public ICollection<ExerciseStepViewModel> ExerciseSteps { get; set; }
+        public IEnumerable<ExerciseStepViewModel> ExerciseSteps { get; set; }
     }
 }

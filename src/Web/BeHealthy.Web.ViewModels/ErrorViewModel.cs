@@ -1,4 +1,4 @@
-﻿namespace BeHealthy.Web.ViewModels
+﻿namespace BeHealthy.Web.Dtos
 {
     public class ErrorViewModel
     {

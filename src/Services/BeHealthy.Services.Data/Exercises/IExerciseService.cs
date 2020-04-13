@@ -6,6 +6,8 @@
     {
         public Task<string> CreateAsync<T>(T exerciseInputModel, string creatorId);
 
-        public T GetExercise<T>(string exerciseId);
+        public Task<T> GetExerciseAsync<T>(string exerciseId);
+
+        public Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId);
     }
 }

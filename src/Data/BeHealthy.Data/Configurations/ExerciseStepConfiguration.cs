@@ -9,6 +9,10 @@
         public void Configure(EntityTypeBuilder<ExerciseStep> exStep)
         {
             exStep
+                .Property(e => e.Heading)
+                .IsRequired(true);
+
+            exStep
                 .Property(e => e.Description)
                 .IsRequired(true);
 
