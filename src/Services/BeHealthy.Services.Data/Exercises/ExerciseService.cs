@@ -31,9 +31,28 @@
         }
 
         public async Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId)
-            => (await this.exerciseRepository.All().FirstOrDefaultAsync(x => !x.IsDeleted && x.Id == exerciseId))?.CreatorId == userId;
+            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId))?.CreatorId == userId;
 
         public async Task<T> GetExerciseAsync<T>(string exerciseId)
-            => await this.exerciseRepository.All().Where(x => !x.IsDeleted && x.Id == exerciseId).To<T>().FirstOrDefaultAsync();
+            => await this.exerciseRepository.AllAsNoTracking().Where(x => x.Id == exerciseId).To<T>().FirstOrDefaultAsync();
+
+        public async Task<bool> ChangePublishState(string exerciseId)
+        {
+            var exercise = await this.exerciseRepository.All().FirstOrDefaultAsync(x => x.Id == exerciseId);
+
+            exercise.IsPublished = !exercise.IsPublished;
+
+            this.exerciseRepository.Update(exercise);
+
+            await this.exerciseRepository.SaveChangesAsync();
+
+            return exercise.IsPublished;
+        }
+
+        public async Task<bool> ExerciseExistsAsync(string exerciseId)
+            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId)) != null;
+
+        public async Task<string> GetExerciseIdByStepIdAsync(int exerciseStepId)
+            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseSteps.Any(es => es.Id == exerciseStepId)))?.Id;
     }
 }

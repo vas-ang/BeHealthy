@@ -1,6 +1,43 @@
-﻿@{
+﻿@model BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels.ExerciseViewModel
+
+@{
     ViewData["Title"] = "Details";
 }
 
 <h1>Details</h1>
 
+<h2>Post name: @Model.Name</h2>
+<h3>Post description: @Model.Description</h3>
+<h3>Creator: @Model.CreatorUserName</h3>
+<hr />
+<h4>Steps</h4>
+@foreach (var item in Model.ExerciseSteps)
+{
+    <h5>@item.Heading</h5>
+    <h6>@item.Image</h6>
+    <h6>@item.Description</h6>
+
+    @if (Model.IsAcessorCreator)
+    {
+        <a class="btn btn-primary" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Edit" asp-route-exerciseStepId="@item.Id">Edit</a>
+        <a class="btn btn-primary" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Delete" asp-route-exerciseStepId="@item.Id">Delete</a>
+    }
+}
+
+@if (Model.IsAcessorCreator)
+{
+    <a class="btn btn-primary" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Create" asp-route-exerciseId="@Model.Id">Add Exercise Step</a>
+    <a class="btn btn-danger" asp-area="Fitness" asp-controller="Exercises" asp-action="Delete" asp-route-exerciseId="@Model.Id">Delete</a>
+
+    @if (Model.IsPublished)
+    {
+        <a class="btn btn-danger" asp-area="Fitness" asp-controller="Exercises" asp-action="ChangePublishState" asp-route-exerciseId="@Model.Id">Hide</a>
+    }
+    else
+    {
+        <a class="btn btn-success" asp-area="Fitness" asp-controller="Exercises" asp-action="ChangePublishState" asp-route-exerciseId="@Model.Id">Publish</a>
+    }
+}
+
+<label for="tags">Tags</label>
+<textarea id="tags" disabled></textarea>

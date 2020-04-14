@@ -23,8 +23,9 @@
             this.userManager = userManager;
         }
 
-        [HttpGet("/{area}/{controller}/")]
-        public IActionResult Browse()
+        // TODO: Pagination!
+        [HttpGet("/{area}/{controller}/{page:int:min(1)=1}")]
+        public IActionResult Browse(int? page)
         {
             return this.View();
         }
@@ -46,32 +47,51 @@
 
             string exerciseId = await this.exerciseService.CreateAsync(exerciseInputModel, creatorId);
 
-            return this.RedirectToAction(nameof(this.Edit), new { exerciseId });
+            return this.RedirectToAction(nameof(this.Details), new { exerciseId });
         }
 
-        public async Task<IActionResult> Edit(string exerciseId)
+        public async Task<IActionResult> Details(string exerciseId)
         {
+            // If the exercise is deleted, should not display.
+            if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
+            {
+                return this.NotFound();
+            }
+
+            var exerciseEditViewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
+
+            string accessorId = this.userManager.GetUserId(this.User);
+            bool isAccessorCreator = await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId);
+
+            // If user is not the creator of the exercise when it's not published, he/she cannot access that page.
+            if (!exerciseEditViewModel.IsPublished && !isAccessorCreator)
+            {
+                return this.RedirectToAction(nameof(this.Browse));
+            }
+
+            exerciseEditViewModel.IsAcessorCreator = isAccessorCreator;
+
+            return this.View(exerciseEditViewModel);
+        }
+
+        public async Task<IActionResult> ChangePublishState(string exerciseId)
+        {
+            // If the exercise is deleted, should not display.
+            if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
+            {
+                return this.NotFound();
+            }
+
             var accessorId = this.userManager.GetUserId(this.User);
 
-            // If user is not the creator of the exercise cannot access that page.
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId))
             {
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
-            var exerciseEditViewModel = await this.exerciseService.GetExerciseAsync<ExerciseEditViewModel>(exerciseId);
+            await this.exerciseService.ChangePublishState(exerciseId);
 
-            return this.View(exerciseEditViewModel);
-        }
-
-        public IActionResult Publish()
-        {
-            return this.RedirectToAction(nameof(this.Details));
-        }
-
-        public IActionResult Details(string exerciseId)
-        {
-            return this.View();
+            return this.RedirectToAction(nameof(this.Details), new { exerciseId });
         }
     }
 }

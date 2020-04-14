@@ -44,7 +44,7 @@
 
             if (this.exerciseStepService.GetExerciseStepsCount(exerciseId) >= 10)
             {
-                return this.RedirectToAction("Edit", "Exercises", new { exerciseId });
+                return this.RedirectToAction("Details", "Exercises", new { exerciseId });
             }
 
             this.TempData["ExerciseId"] = exerciseId;
@@ -53,7 +53,7 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ExerciseStepInputModel exerciseStepInputModel)
+        public async Task<IActionResult> Create(ExerciseStepCreateInputModel exerciseStepInputModel)
         {
             var user = await this.userManager.GetUserAsync(this.User);
 
@@ -64,24 +64,90 @@
 
             if (this.exerciseStepService.GetExerciseStepsCount(exerciseStepInputModel.ExerciseId) >= 10)
             {
-                return this.RedirectToAction("Edit", "Exercises", new { exerciseStepInputModel.ExerciseId });
+                return this.RedirectToAction("Details", "Exercises", new { exerciseStepInputModel.ExerciseId });
             }
 
             var imageUrl = await this.cloudinaryService.UploadImageAsync($"{Guid.NewGuid()}_{user.UserName}", user.UserName, exerciseStepInputModel.ImageUpload);
 
             await this.exerciseStepService.CreateExerciseStepAsync(exerciseStepInputModel, imageUrl);
 
-            return this.RedirectToAction("Edit", "Exercises", new { exerciseStepInputModel.ExerciseId });
+            return this.RedirectToAction("Details", "Exercises", new { exerciseStepInputModel.ExerciseId });
         }
 
-        public IActionResult Edit(string exerciseStepid)
+        public async Task<IActionResult> Edit(int exerciseStepId)
         {
-            return this.View();
+            if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepId))
+            {
+                return this.NotFound();
+            }
+
+            var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepId);
+
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
+            {
+                return this.RedirectToAction("Browse", "Exercises");
+            }
+
+            var viewModel = await this.exerciseStepService.GetExerciseStepAsync<ExerciseStepEditInputModel>(exerciseStepId);
+
+            return this.View(viewModel);
         }
 
-        public IActionResult Delete(string exerciseStepId)
+        [HttpPost]
+        public async Task<IActionResult> Edit(ExerciseStepEditInputModel exerciseStepEditInputModel)
         {
-            return this.RedirectToAction("/");
+            if (!this.ModelState.IsValid)
+            {
+                return this.RedirectToAction(nameof(this.Edit));
+            }
+
+            if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepEditInputModel.Id))
+            {
+                return this.NotFound();
+            }
+
+            var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepEditInputModel.Id);
+
+            var user = await this.userManager.GetUserAsync(this.User);
+
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, user.Id))
+            {
+                return this.RedirectToAction("Browse", "Exercises");
+            }
+
+            string newImageUrl = string.Empty;
+
+            if (exerciseStepEditInputModel.ImageUpload != null)
+            {
+                newImageUrl = await this.cloudinaryService.UploadImageAsync($"{Guid.NewGuid()}_{user.UserName}", user.UserName, exerciseStepEditInputModel.ImageUpload);
+            }
+
+            await this.exerciseStepService.UpdateExerciseStepAsync(exerciseStepEditInputModel, newImageUrl);
+
+            return this.RedirectToAction("Details", "Exercises", new { exerciseId });
+        }
+
+        public async Task<IActionResult> Delete(int exerciseStepId)
+        {
+            if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepId))
+            {
+                return this.NotFound();
+            }
+
+            var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepId);
+
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
+            {
+                return this.RedirectToAction("Browse", "Exercises");
+            }
+
+            await this.exerciseStepService.DeleteExerciseStepAsync(exerciseStepId);
+
+            return this.RedirectToAction("Details", "Exercises", new { exerciseId });
         }
     }
 }
