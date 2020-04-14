@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
 
     using BeHealthy.Data.Models;
-    using BeHealthy.Services.Data;
+    using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Web.Dtos.Fitness.Exercises.InputModels;
     using BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels;
     using Microsoft.AspNetCore.Authorization;
@@ -23,11 +23,12 @@
             this.userManager = userManager;
         }
 
-        // TODO: Pagination!
         [HttpGet("/{area}/{controller}/{page:int:min(1)=1}")]
-        public IActionResult Browse(int? page)
+        public async Task<IActionResult> Browse(int page)
         {
-            return this.View();
+            var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, x => x.CreatedOn);
+
+            return this.View(viewModel);
         }
 
         public IActionResult Create()

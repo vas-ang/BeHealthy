@@ -1,0 +1,15 @@
+﻿@model IEnumerable<BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels.UnpublishedExerciseViewModel>
+
+@{
+    ViewData["Title"] = "Default";
+}
+
+<div class="card" style="width: 12rem;">
+    <div class="card-body">
+        <h5 class="card-title">Your unpublished exercises</h5>
+        @foreach (var exercise in Model)
+        {
+            <a class="btn-block mb-2 text-dark" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id">@exercise.Name</a>
+        }
+    </div>
+</div>

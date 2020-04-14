@@ -5,6 +5,7 @@
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Mapping;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     public class ExerciseStepEditInputModel : IMapFrom<ExerciseStep>, IMapTo<ExerciseStep>
     {
@@ -17,6 +18,7 @@
         [DataType(DataType.Upload)]
         public IFormFile ImageUpload { get; set; }
 
+        [BindNever]
         public string Image { get; set; }
 
         [Required]
@@ -27,6 +29,7 @@
         public int Id { get; set; }
 
         [Required]
+        [BindNever]
         public string ExerciseId { get; set; }
     }
 }

@@ -9,7 +9,7 @@
     using BeHealthy.Data.Repositories;
     using BeHealthy.Data.Seeding;
     using BeHealthy.Services.Cloudinary;
-    using BeHealthy.Services.Data;
+    using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Services.Data.ExerciseSteps;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;

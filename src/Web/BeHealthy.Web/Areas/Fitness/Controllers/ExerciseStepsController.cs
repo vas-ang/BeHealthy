@@ -5,7 +5,7 @@
 
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Cloudinary;
-    using BeHealthy.Services.Data;
+    using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Services.Data.ExerciseSteps;
     using BeHealthy.Web.Dtos.Fitness.ExerciseSteps.InputModels;
     using Microsoft.AspNetCore.Authorization;
