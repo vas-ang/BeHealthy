@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class ExerciseTagsInputModel
+    public class ExerciseTagCreateInputModel
     {
         [Required]
         public string ExerciseId { get; set; }

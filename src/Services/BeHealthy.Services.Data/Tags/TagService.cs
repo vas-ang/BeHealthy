@@ -1,6 +1,5 @@
 ﻿namespace BeHealthy.Services.Data.Tags
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
@@ -53,15 +52,19 @@
             return tag.To<T>();
         }
 
+        public async Task DeleteExerciseTagAsync<T>(T inputModel)
+        {
+            var exerciseTag = inputModel.To<ExerciseTag>();
+
+            this.exerciseTagsRepository.Delete(exerciseTag);
+
+            await this.exerciseTagsRepository.SaveChangesAsync();
+        }
+
         public async Task<bool> ExerciseTagExistsAsync(string exerciseId, string name)
             => await this.exerciseTagsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId && x.Tag.Name == name) != null;
 
-        public async Task<IEnumerable<T>> GetExerciseTagsAsync<T>(string exeriseId)
-            => await this.tagsRepository
-                .AllAsNoTracking()
-                .Where(x => x.ExerciseTags
-                    .Any(y => y.ExerciseId == exeriseId))
-                .To<T>()
-                .ToArrayAsync();
+        public async Task<bool> ExerciseTagExistsAsync(string exerciseId, int tagId)
+            => await this.exerciseTagsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId && x.TagId == tagId) != null;
     }
 }

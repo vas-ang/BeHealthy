@@ -14,7 +14,5 @@
         public string Name { get; set; }
 
         public virtual ICollection<ExerciseTag> ExerciseTags { get; set; }
-
-        // TODO: public virtual ICollection<hranaTag> hranaTags { get; set; }
     }
 }

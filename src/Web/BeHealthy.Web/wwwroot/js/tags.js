@@ -9,11 +9,46 @@ function onLoad(exerciseId) {
     const csrfToken = document.querySelector("#tagForm > input[type=hidden]:nth-child(2)").value;
     const container = document.getElementById("tagContainer");
 
-    tagInput.addEventListener("keypress", eventHandler.bind(undefined, exerciseId, csrfToken, container));
+    const clickEventHandler = {
+        "delete": function (exerciseId, e) {
+            const obj = {
+                exerciseId: exerciseId,
+                tagId: Number(e.target.dataset.id)
+            };
+
+            fetch(`${document.location.origin}/api/Tags/Exercise`, {
+                method: "DELETE",
+                mode: "cors",
+                cache: "no-cache",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json",
+                    "CSRF-TOKEN": csrfToken
+                },
+                body: JSON.stringify(obj)
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Something went wrong');
+                    }
+                })
+                .then(x => e.target.parentElement.remove())
+                .catch(error => console.log(error));
+        }
+    }
+
+    document.addEventListener("click", function (e) {
+        if (typeof clickEventHandler[e.target.dataset.action] === "function") {
+            clickEventHandler[e.target.dataset.action](exerciseId, e);
+        }
+    })
+
+    tagInput.addEventListener("keypress", btnDownEventHandler.bind(undefined, exerciseId, csrfToken, container));
+
 }
 
-function eventHandler(exerciseId, csrfToken, container, e) {
-    if (e.code === "Space") {
+function btnDownEventHandler(exerciseId, csrfToken, container, e) {
+    if (e.code === "Space" && e.target.value.trim() !== "") {
         const inputValue = e.target.value.toLocaleLowerCase().trim();
         e.target.value = "";
 
@@ -22,7 +57,7 @@ function eventHandler(exerciseId, csrfToken, container, e) {
             "tagName": inputValue
         };
 
-        fetch("/api/Tags/Exercises", {
+        fetch("/api/Tags/Exercise", {
             method: "POST",
             mode: "cors",
             cache: "no-cache",
@@ -31,10 +66,17 @@ function eventHandler(exerciseId, csrfToken, container, e) {
                 "Content-Type": "application/json",
                 "CSRF-TOKEN": csrfToken
             },
-            body: JSON.stringify(json),
+            body: JSON.stringify(json)
         })
-            .then(x => x.json())
-            .then(x => container.appendChild(parseButton(x)));
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Something went wrong');
+                }
+            })
+            .then(x => container.appendChild(parseButton(x)))
+            .catch(error => console.log(error));
     }
 }
 
@@ -44,10 +86,25 @@ function parseButton(obj) {
 
 function configureButtonProperties(obj, el) {
     el.textContent = obj.name;
-    el.href = `${document.location.origin}/api/Tags/Exercises/${obj.id}`;
+
+    el.href = "#";
 
     el.classList.add("btn");
     el.classList.add("btn-primary");
+
+    el.appendChild(createElement(document, "i", configureDeleteButton.bind(undefined, obj)));
+}
+
+function configureDeleteButton(obj, el) {
+    el.href = `${document.location.origin}/api/Tags/Exercise`;
+
+    el.dataset.id = obj.id;
+    el.dataset.action = "delete";
+
+    el.classList.add("fa");
+    el.classList.add("fa-minus");
+    el.classList.add("btn");
+    el.classList.add("btn-danger");
 }
 
 function createElement(elementCreator, tagName, tagPropertiesSetter) {

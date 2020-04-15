@@ -9,7 +9,9 @@
 <h2>Post name: @Model.Name</h2>
 <h3>Post description: @Model.Description</h3>
 <h3>Creator: @Model.CreatorUserName</h3>
+
 <hr />
+
 <h4>Steps</h4>
 @foreach (var item in Model.ExerciseSteps)
 {
@@ -28,7 +30,12 @@
 <span id="tagContainer" disabled>
     @foreach (var tag in Model.ExerciseTags)
     {
-        <a class="btn btn-primary" href="/api/Tags/Exercises/@tag.TagId">@tag.TagName</a>
+        <a class="btn btn-primary" href="#">
+            @tag.TagName @if (Model.IsAcessorCreator)
+            {
+                <i class="fas fa-minus btn btn-danger " href="/api/Tags/Exercise" data-action="delete" data-id="@tag.TagId"></i>
+            }
+        </a>
     }
 </span>
 
