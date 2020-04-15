@@ -11,6 +11,7 @@
     using BeHealthy.Services.Cloudinary;
     using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Services.Data.ExerciseSteps;
+    using BeHealthy.Services.Data.Tags;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
     using BeHealthy.Web.Dtos;
@@ -54,6 +55,10 @@
             {
                 configure.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+            services.AddAntiforgery(options =>
+            {
+                options.HeaderName = "CSRF-TOKEN";
+            });
             services.AddRazorPages();
 
             services.AddSingleton(this.configuration);
@@ -66,6 +71,7 @@
             // Application services
             services.AddTransient<IExerciseService, ExerciseService>();
             services.AddTransient<IExerciseStepService, ExerciseStepService>();
+            services.AddTransient<ITagService, TagService>();
 
             var sendGridEmailSender = new SendGridEmailSender(this.configuration["SendGrid:ApiKey"], this.configuration["SendGrid:SenderEmail"], this.configuration["SendGrid:SenderName"]);
             services.AddTransient<IEmailSender, SendGridEmailSender>(x => sendGridEmailSender);

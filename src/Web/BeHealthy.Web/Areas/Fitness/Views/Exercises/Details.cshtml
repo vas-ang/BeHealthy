@@ -24,6 +24,14 @@
     }
 }
 
+<label id="preview" for="tags">Tags</label>
+<span id="tagContainer" disabled>
+    @foreach (var tag in Model.ExerciseTags)
+    {
+        <a class="btn btn-primary" href="/api/Tags/Exercises/@tag.TagId">@tag.TagName</a>
+    }
+</span>
+
 @if (Model.IsAcessorCreator)
 {
     <a class="btn btn-primary" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Create" asp-route-exerciseId="@Model.Id">Add Exercise Step</a>
@@ -37,7 +45,16 @@
     {
         <a class="btn btn-success" asp-area="Fitness" asp-controller="Exercises" asp-action="ChangePublishState" asp-route-exerciseId="@Model.Id">Publish</a>
     }
-}
+    <hr />
+    <h4>Add a tag</h4>
+    <form id="tagForm" method="post">
+        <input id="tagInput" type="text" />
+    </form>
 
-<label for="tags">Tags</label>
-<textarea id="tags" disabled></textarea>
+    @section Scripts{
+        <script src="~/js/tags.js"></script>
+        <script type="text/javascript">
+            main("@Model.Id");
+        </script>
+    }
+}

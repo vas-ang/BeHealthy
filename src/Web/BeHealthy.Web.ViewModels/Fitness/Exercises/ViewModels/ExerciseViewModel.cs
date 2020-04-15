@@ -20,5 +20,7 @@
         public string CreatorUserName { get; set; }
 
         public IEnumerable<ExerciseStepViewModel> ExerciseSteps { get; set; }
+
+        public IEnumerable<ExerciseTagViewModel> ExerciseTags { get; set; }
     }
 }
