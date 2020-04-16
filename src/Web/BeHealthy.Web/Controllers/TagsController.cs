@@ -49,7 +49,7 @@
 
             var result = await this.tagService.CreateExerciseTagAsync<TagViewModel>(inputModel.ExerciseId, inputModel.TagName);
 
-            return this.Created($"api/Tags/Exercises/{inputModel.ExerciseId}", result);
+            return this.Created($"api/Tags/Exercise", result);
         }
 
         [HttpDelete("Exercise")]

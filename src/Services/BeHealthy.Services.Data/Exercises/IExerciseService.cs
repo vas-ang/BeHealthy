@@ -13,6 +13,8 @@
 
         public Task<T> GetExerciseAsync<T>(string exerciseId);
 
+        public Task<bool> IsExercisePublishedAsync(string exerciseId);
+
         public Task<string> GetExerciseIdByStepIdAsync(int exerciseStepId);
 
         public Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId);

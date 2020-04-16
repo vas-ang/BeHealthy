@@ -4,6 +4,7 @@
 
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Data.Exercises;
+    using BeHealthy.Services.Data.Reviews;
     using BeHealthy.Web.Dtos.Fitness.Exercises.InputModels;
     using BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels;
     using Microsoft.AspNetCore.Authorization;
@@ -15,11 +16,13 @@
     public class ExercisesController : Controller
     {
         private readonly IExerciseService exerciseService;
+        private readonly IReviewService reviewService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ExercisesController(IExerciseService exerciseService, UserManager<ApplicationUser> userManager)
+        public ExercisesController(IExerciseService exerciseService, IReviewService reviewService, UserManager<ApplicationUser> userManager)
         {
             this.exerciseService = exerciseService;
+            this.reviewService = reviewService;
             this.userManager = userManager;
         }
 
@@ -59,20 +62,22 @@
                 return this.NotFound();
             }
 
-            var exerciseEditViewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
+            var exerciseViewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
 
-            string accessorId = this.userManager.GetUserId(this.User);
-            bool isAccessorCreator = await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId);
+            var accessor = await this.userManager.GetUserAsync(this.User);
+            bool isAccessorCreator = await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessor.Id);
 
             // If user is not the creator of the exercise when it's not published, he/she cannot access that page.
-            if (!exerciseEditViewModel.IsPublished && !isAccessorCreator)
+            if (!exerciseViewModel.IsPublished && !isAccessorCreator)
             {
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
-            exerciseEditViewModel.IsAcessorCreator = isAccessorCreator;
+            exerciseViewModel.IsAcessorCreator = isAccessorCreator;
 
-            return this.View(exerciseEditViewModel);
+            exerciseViewModel.ExerciseReviewUserRating = await this.reviewService.GetExerciseReviewRatingAsync(exerciseId, accessor.Id);
+
+            return this.View(exerciseViewModel);
         }
 
         public async Task<IActionResult> ChangePublishState(string exerciseId)

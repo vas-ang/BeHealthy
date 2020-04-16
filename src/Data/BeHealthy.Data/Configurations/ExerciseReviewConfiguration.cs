@@ -8,7 +8,7 @@
     {
         public void Configure(EntityTypeBuilder<ExerciseReview> exReview)
         {
-            exReview.HasKey(e => new { e.UserId, e.ExerciseId });
+            exReview.HasKey(e => new { e.AuthorId, e.ExerciseId });
         }
     }
 }

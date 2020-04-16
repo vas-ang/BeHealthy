@@ -39,7 +39,23 @@
     }
 </span>
 
-@if (Model.IsAcessorCreator)
+@if (!Model.IsAcessorCreator)
+{
+    <p>Your rating:</p>
+    <form id="ratingForm" method="post">
+        @for (int i = 1; i <= 5; i++)
+        {
+            <i class="fas fa-star" @if (Model.ExerciseReviewUserRating >= i) { @: style="color: gold;"
+               } data-value="@i"></i>
+        }
+    </form>
+
+    @section Scripts{
+        <script src="~/js/rating.min.js"></script>
+        <script type="text/javascript">main(@Model.ExerciseReviewUserRating);</script>
+    }
+}
+else
 {
     <a class="btn btn-primary" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Create" asp-route-exerciseId="@Model.Id">Add Exercise Step</a>
     <a class="btn btn-danger" asp-area="Fitness" asp-controller="Exercises" asp-action="Delete" asp-route-exerciseId="@Model.Id">Delete</a>
@@ -59,7 +75,7 @@
     </form>
 
     @section Scripts{
-        <script src="~/js/tags.js"></script>
+        <script src="~/js/tags.min.js"></script>
         <script type="text/javascript">
             main("@Model.Id");
         </script>

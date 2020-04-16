@@ -75,5 +75,8 @@
                 .OrderByDescending(x => x.CreatedOn)
                 .To<T>()
                 .ToArrayAsync();
+
+        public async Task<bool> IsExercisePublishedAsync(string exerciseId)
+            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId))?.IsPublished == true;
     }
 }

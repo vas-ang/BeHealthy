@@ -15,6 +15,8 @@
 
         public bool IsPublished { get; set; }
 
+        public int ExerciseReviewUserRating { get; set; }
+
         public bool IsAcessorCreator { get; set; }
 
         public string CreatorUserName { get; set; }

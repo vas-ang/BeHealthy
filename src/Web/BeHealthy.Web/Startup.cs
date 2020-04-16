@@ -11,6 +11,7 @@
     using BeHealthy.Services.Cloudinary;
     using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Services.Data.ExerciseSteps;
+    using BeHealthy.Services.Data.Reviews;
     using BeHealthy.Services.Data.Tags;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
@@ -72,6 +73,7 @@
             services.AddTransient<IExerciseService, ExerciseService>();
             services.AddTransient<IExerciseStepService, ExerciseStepService>();
             services.AddTransient<ITagService, TagService>();
+            services.AddTransient<IReviewService, ReviewService>();
 
             var sendGridEmailSender = new SendGridEmailSender(this.configuration["SendGrid:ApiKey"], this.configuration["SendGrid:SenderEmail"], this.configuration["SendGrid:SenderName"]);
             services.AddTransient<IEmailSender, SendGridEmailSender>(x => sendGridEmailSender);
