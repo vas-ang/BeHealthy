@@ -17,6 +17,7 @@
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.CreatedExercises = new HashSet<Exercise>();
             this.ExerciseReviews = new HashSet<ExerciseReview>();
+            this.Workouts = new HashSet<Workout>();
         }
 
         public string ProfilePicture { get; set; }
@@ -38,5 +39,7 @@
         public virtual ICollection<Exercise> CreatedExercises { get; set; }
 
         public virtual ICollection<ExerciseReview> ExerciseReviews { get; set; }
+
+        public virtual ICollection<Workout> Workouts { get; set; }
     }
 }

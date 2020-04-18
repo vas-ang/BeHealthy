@@ -50,7 +50,12 @@
 
         public async Task UpdateExerciseStepAsync<T>(T inputModel, string imageUrl)
         {
-            var exerciseStep = inputModel.To<ExerciseStep>();
+            var updatedExerciseStep = inputModel.To<ExerciseStep>();
+
+            var exerciseStep = await this.exerciseStepRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == updatedExerciseStep.Id);
+
+            exerciseStep.Heading = updatedExerciseStep.Heading;
+            exerciseStep.Description = updatedExerciseStep.Description;
 
             if (imageUrl != string.Empty)
             {

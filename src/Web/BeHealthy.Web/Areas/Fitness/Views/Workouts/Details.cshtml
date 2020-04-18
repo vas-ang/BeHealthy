@@ -1,0 +1,41 @@
+﻿@model WorkoutDetailsViewModel
+
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@Model.Name</h1>
+<h2>@Model.Weekday</h2>
+
+<h3>Exercises</h3>
+@foreach (var exercise in Model.WorkoutExercises.OrderBy(x => x.Order))
+{
+    <div class="card">
+        <h5 class="card-header">@exercise.ExerciseName</h5>
+        <div class="card-body">
+            <p class="card-text">@exercise.ExerciseDescription</p>
+            <a class="btn btn-primary" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.ExerciseId">Details</a>
+        </div>
+    </div>
+}
+
+<a class="btn btn-warning" asp-area="Fitness" asp-controller="Workouts" asp-action="Edit" asp-route-workoutId="@Model.Id">Edit</a>
+<a class="btn btn-danger" href="#" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                Confirm Delete
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete @Model.Name?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-danger btn-ok" asp-area="Fitness" asp-controller="Workouts" asp-action="Delete" asp-route-workoutId="@Model.Id">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+﻿@model IEnumerable<BeHealthy.Web.Dtos.Fitness.Workouts.ViewModels.WorkoutListViewModel>
+
+
+@{
+    ViewData["Title"] = "Schedule";
+}
+
+<h1>Schedule</h1>
+
+@foreach (Weekday weekday in Enum.GetValues(typeof(Weekday)))
+{
+    @if (Model.Any(x => x.Weekday == weekday))
+    {
+        <h2>@weekday</h2>
+        <hr />
+        @foreach (var workout in Model.Where(x => x.Weekday == weekday))
+        {
+            <div class="card">
+                <h5 class="card-header">@workout.Name</h5>
+                <div class="card-body">
+                    <a asp-area="Fitness" asp-controller="Workouts" asp-action="Details" asp-route-workoutId="@workout.Id" class="btn btn-primary">Details</a>
+                </div>
+            </div>
+        }
+    }
+}
+
+<a asp-area="Fitness" asp-controller="Workouts" asp-action="Create" class="btn btn-primary">Create a workout</a>

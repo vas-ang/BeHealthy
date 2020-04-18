@@ -13,6 +13,7 @@
     using BeHealthy.Services.Data.ExerciseSteps;
     using BeHealthy.Services.Data.Reviews;
     using BeHealthy.Services.Data.Tags;
+    using BeHealthy.Services.Data.Workouts;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
     using BeHealthy.Web.Dtos;
@@ -74,8 +75,12 @@
             services.AddTransient<IExerciseStepService, ExerciseStepService>();
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IWorkoutService, WorkoutService>();
 
-            var sendGridEmailSender = new SendGridEmailSender(this.configuration["SendGrid:ApiKey"], this.configuration["SendGrid:SenderEmail"], this.configuration["SendGrid:SenderName"]);
+            var sendGridEmailSender = new SendGridEmailSender(
+                this.configuration["SendGrid:ApiKey"],
+                this.configuration["SendGrid:SenderEmail"],
+                this.configuration["SendGrid:SenderName"]);
             services.AddTransient<IEmailSender, SendGridEmailSender>(x => sendGridEmailSender);
 
             var account = new Account

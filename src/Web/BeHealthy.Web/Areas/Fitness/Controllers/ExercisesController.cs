@@ -26,7 +26,7 @@
             this.userManager = userManager;
         }
 
-        [HttpGet("/{area}/{controller}/{page:int:min(1)=1}")]
+        [Route("/{area}/{controller}/{page:int:min(1)=1}")]
         public async Task<IActionResult> Browse(int page)
         {
             var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, x => x.CreatedOn);
