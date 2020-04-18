@@ -9,13 +9,16 @@
 <h2>@Model.Weekday</h2>
 
 <h3>Exercises</h3>
-@foreach (var exercise in Model.WorkoutExercises.OrderBy(x => x.Order))
+@foreach (var exercise in Model.WorkoutExercises)
 {
     <div class="card">
         <h5 class="card-header">@exercise.ExerciseName</h5>
         <div class="card-body">
-            <p class="card-text">@exercise.ExerciseDescription</p>
-            <a class="btn btn-primary" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.ExerciseId">Details</a>
+            <h6 class="card-title">@exercise.ExerciseDescription</h6>
+            <p class="card-text">@exercise.Sets Sets</p>
+            <p class="card-text">@exercise.Repetitions Repetitions</p>
+            <a class="btn btn-primary float-left" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.ExerciseId">Details</a>
+            <a class="btn btn-danger float-right" asp-area="Fitness" asp-controller="Workouts" asp-action="RemoveExercise" asp-route-exerciseId="@exercise.ExerciseId" asp-route-workoutId="@Model.Id">Delete</a>
         </div>
     </div>
 }

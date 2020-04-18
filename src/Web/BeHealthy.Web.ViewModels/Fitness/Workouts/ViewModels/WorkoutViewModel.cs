@@ -4,7 +4,7 @@
     using BeHealthy.Data.Models.Enumerators;
     using BeHealthy.Services.Mapping;
 
-    public class WorkoutListViewModel : IMapFrom<Workout>
+    public class WorkoutViewModel : IMapFrom<Workout>
     {
         public string Id { get; set; }
 

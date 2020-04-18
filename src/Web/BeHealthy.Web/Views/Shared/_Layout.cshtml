@@ -45,6 +45,17 @@
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
+
+            @if (this.TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>@this.TempData["ErrorMessage"]</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            }
+
             @this.RenderBody()
         </main>
     </div>

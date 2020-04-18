@@ -31,7 +31,7 @@
             return workout.Id;
         }
 
-        public async Task DeleteAsync(string workoutId)
+        public async Task DeleteWorkoutAsync(string workoutId)
         {
             var workout = await this.workoutsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == workoutId);
 

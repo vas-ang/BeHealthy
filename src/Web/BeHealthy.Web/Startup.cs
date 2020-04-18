@@ -13,6 +13,7 @@
     using BeHealthy.Services.Data.ExerciseSteps;
     using BeHealthy.Services.Data.Reviews;
     using BeHealthy.Services.Data.Tags;
+    using BeHealthy.Services.Data.WorkoutExercises;
     using BeHealthy.Services.Data.Workouts;
     using BeHealthy.Services.Mapping;
     using BeHealthy.Services.Messaging;
@@ -76,6 +77,7 @@
             services.AddTransient<ITagService, TagService>();
             services.AddTransient<IReviewService, ReviewService>();
             services.AddTransient<IWorkoutService, WorkoutService>();
+            services.AddTransient<IWorkoutExerciseService, WorkoutExerciseService>();
 
             var sendGridEmailSender = new SendGridEmailSender(
                 this.configuration["SendGrid:ApiKey"],

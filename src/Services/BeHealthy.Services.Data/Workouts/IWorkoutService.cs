@@ -13,7 +13,7 @@
 
         public Task<bool> IsUserWorkoutCreatorAsync(string workoutId, string userId);
 
-        public Task DeleteAsync(string workoutId);
+        public Task DeleteWorkoutAsync(string workoutId);
 
         public Task<IEnumerable<T>> GetAllUserWorkoutsAsync<T>(string userId);
 

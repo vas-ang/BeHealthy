@@ -39,6 +39,8 @@
     }
 </span>
 
+<a class="btn btn-primary" asp-area="Fitness" asp-controller="Workouts" asp-action="AddExercise" asp-route-exerciseId="@Model.Id">Add to workout</a>
+
 @if (!Model.IsAcessorCreator)
 {
     <p>Your rating:</p>
