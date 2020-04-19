@@ -195,6 +195,7 @@
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(workoutId, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid workout id.";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 
@@ -202,7 +203,7 @@
 
             if (!success)
             {
-                this.TempData["ErrorMessage"] = "Exercise cannot be removed.";
+                this.TempData["ErrorMessage"] = "Exercise could not be removed.";
             }
 
             return this.RedirectToAction(nameof(this.Details), new { workoutId });

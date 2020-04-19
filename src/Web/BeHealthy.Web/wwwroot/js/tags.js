@@ -75,24 +75,31 @@ function btnDownEventHandler(exerciseId, csrfToken, container, e) {
                     throw new Error('Something went wrong');
                 }
             })
-            .then(x => container.appendChild(parseButton(x)))
+            .then(x => container.appendChild(createTag(x)))
             .catch(error => console.log(error));
     }
 }
 
-function parseButton(obj) {
-    return createElement(document, "a", configureButtonProperties.bind(undefined, obj));
+function createTag(obj) {
+    const tagContainer = createElement(document, "div", configureTagContainer);
+
+    tagContainer.appendChild(createElement(document, "a", configureButtonProperties.bind(undefined, obj)));
+    tagContainer.appendChild(createElement(document, "i", configureDeleteButton.bind(undefined, obj)));
+
+    return tagContainer;
+}
+
+function configureTagContainer(el) {
+    el.classList.add("btn");
+    el.classList.add("btn-primary");
 }
 
 function configureButtonProperties(obj, el) {
     el.textContent = obj.name;
 
-    el.href = "#";
+    el.href = `/Fitness/Exercises/${obj.name}`;
 
-    el.classList.add("btn");
-    el.classList.add("btn-primary");
-
-    el.appendChild(createElement(document, "i", configureDeleteButton.bind(undefined, obj)));
+    el.classList.add("text-light");
 }
 
 function configureDeleteButton(obj, el) {
@@ -103,8 +110,9 @@ function configureDeleteButton(obj, el) {
 
     el.classList.add("fa");
     el.classList.add("fa-minus");
-    el.classList.add("btn");
-    el.classList.add("btn-danger");
+    el.classList.add("text-warning");
+    el.classList.add("bg-danger");
+    el.classList.add("rounded");
 }
 
 function createElement(elementCreator, tagName, tagPropertiesSetter) {

@@ -27,17 +27,18 @@
 }
 
 <label id="preview" for="tags">Tags</label>
-<span id="tagContainer" disabled>
+<div id="tagContainer">
     @foreach (var tag in Model.ExerciseTags)
     {
-        <a class="btn btn-primary" href="#">
-            @tag.TagName @if (Model.IsAcessorCreator)
+        <div class="btn btn-primary">
+            <a class="text-light" asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-tag="@tag.TagName">@tag.TagName</a>
+            @if (Model.IsAcessorCreator)
             {
-                <i class="fas fa-minus btn btn-danger " href="/api/Tags/Exercise" data-action="delete" data-id="@tag.TagId"></i>
+                <i class="fas fa-minus text-warning bg-danger rounded" href="/api/Tags/Exercise" data-action="delete" data-id="@tag.TagId"></i>
             }
-        </a>
+        </div>
     }
-</span>
+</div>
 
 <a class="btn btn-primary" asp-area="Fitness" asp-controller="Workouts" asp-action="AddExercise" asp-route-exerciseId="@Model.Id">Add to workout</a>
 
@@ -53,7 +54,7 @@
     </form>
 
     @section Scripts{
-        <script src="~/js/rating.min.js"></script>
+        <script src="~/js/rating.min.js" asp-append-version="true"></script>
         <script type="text/javascript">main(@Model.ExerciseReviewUserRating);</script>
     }
 }
@@ -77,7 +78,7 @@ else
     </form>
 
     @section Scripts{
-        <script src="~/js/tags.min.js"></script>
+        <script src="~/js/tags.min.js" asp-append-version="true"></script>
         <script type="text/javascript">
             main("@Model.Id");
         </script>

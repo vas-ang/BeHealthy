@@ -34,6 +34,14 @@
             return this.View(viewModel);
         }
 
+        [Route("/{area}/{controller}/{tag}/{page:int:min(1)=1}")]
+        public async Task<IActionResult> AllWithTag(int page, string tag)
+        {
+            var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, tag, x => x.CreatedOn);
+
+            return this.View(viewModel);
+        }
+
         public IActionResult Create()
         {
             return this.View();

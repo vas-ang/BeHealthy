@@ -25,6 +25,8 @@
 
         public Task<IEnumerable<T>> GetPublishedExercisesAsync<T, TKey>(int page, int perPage, Expression<Func<Exercise, TKey>> orderCriteria);
 
+        public Task<IEnumerable<T>> GetPublishedExercisesWithTagAsync<T, TKey>(int page, int perPage, string tag, Expression<Func<Exercise, TKey>> orderCriteria);
+
         public Task<IEnumerable<T>> GetUnpublishedExercisesAsync<T>(string userId);
     }
 }

@@ -34,10 +34,16 @@
         }
 
         public async Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId)
-            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId))?.CreatorId == userId;
+            => (await this.exerciseRepository
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == exerciseId))?.CreatorId == userId;
 
         public async Task<T> GetExerciseAsync<T>(string exerciseId)
-            => await this.exerciseRepository.AllAsNoTracking().Where(x => x.Id == exerciseId).To<T>().FirstOrDefaultAsync();
+            => await this.exerciseRepository
+                .AllAsNoTracking()
+                .Where(x => x.Id == exerciseId)
+                .To<T>()
+                .FirstOrDefaultAsync();
 
         public async Task<bool> ChangePublishState(string exerciseId)
         {
@@ -53,10 +59,14 @@
         }
 
         public async Task<bool> ExerciseExistsAsync(string exerciseId)
-            => await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId) != null;
+            => await this.exerciseRepository
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == exerciseId) != null;
 
         public async Task<string> GetExerciseIdByStepIdAsync(int exerciseStepId)
-            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseSteps.Any(es => es.Id == exerciseStepId)))?.Id;
+            => (await this.exerciseRepository
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.ExerciseSteps.Any(es => es.Id == exerciseStepId)))?.Id;
 
         public async Task<IEnumerable<T>> GetPublishedExercisesAsync<T, TKey>(int page, int perPage, Expression<Func<Exercise, TKey>> orderCriteria)
             => await this.exerciseRepository
@@ -77,6 +87,19 @@
                 .ToArrayAsync();
 
         public async Task<bool> IsExercisePublishedAsync(string exerciseId)
-            => (await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId))?.IsPublished == true;
+            => (await this.exerciseRepository
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == exerciseId))?.IsPublished == true;
+
+        public async Task<IEnumerable<T>> GetPublishedExercisesWithTagAsync<T, TKey>(int page, int perPage, string tag, Expression<Func<Exercise, TKey>> orderCriteria)
+            => await this.exerciseRepository
+                .AllAsNoTracking()
+                .Where(x => x.ExerciseTags
+                    .Any(y => y.Tag.Name == tag) && x.IsPublished)
+                .OrderByDescending(orderCriteria)
+                .Skip((page - 1) * perPage)
+                .Take(perPage)
+                .To<T>()
+                .ToArrayAsync();
     }
 }

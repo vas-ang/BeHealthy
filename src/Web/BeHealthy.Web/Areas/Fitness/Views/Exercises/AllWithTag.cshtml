@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ExerciseListItemViewModel>
+
+@{
+    ViewData["Title"] = "Browse";
+}
+
+<div class="row">
+    <div class="col-md-10">
+        @foreach (var exercise in Model)
+        {
+            <div class="card my-2">
+                <div class="card-header">
+                    @exercise.Name
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@exercise.CreatorUserName</h5>
+                    <p class="card-text">@exercise.Description</p>
+                    <a asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id" class="btn btn-primary">Look up</a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-2">
+        @await Component.InvokeAsync("UnpublishedExercises")
+    </div>
+</div>
+
+<hr />
+You want to share an exercise idea? <a class="btn btn-info" asp-area="Fitness" asp-controller="Exercises" asp-action="Create">Click here!</a>
