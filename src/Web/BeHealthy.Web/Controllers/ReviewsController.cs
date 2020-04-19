@@ -44,7 +44,7 @@
 
             if (await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId))
             {
-                return this.BadRequest();
+                return this.Unauthorized();
             }
 
             if (await this.reviewService.ExerciseReviewExistsAsync(inputModel.ExerciseId, userId))
@@ -74,7 +74,7 @@
 
             if (await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId))
             {
-                return this.BadRequest();
+                return this.Unauthorized();
             }
 
             if (!await this.reviewService.ExerciseReviewExistsAsync(inputModel.ExerciseId, userId))
@@ -109,7 +109,7 @@
 
             if (await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
             {
-                return this.BadRequest();
+                return this.Unauthorized();
             }
 
             await this.reviewService.DeleteExerciseReviewAsync(exerciseId, userId);

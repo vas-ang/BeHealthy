@@ -1,0 +1,16 @@
+﻿@model BeHealthy.Web.Dtos.Users.ViewModels.UserDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@Model.UserName
+
+Member since: @Model.CreatedOn
+
+@foreach (var exercise in Model.CreatedExercises)
+{
+    <h5>@exercise.Name</h5>
+    <h6>@exercise.Description</h6>
+    <h6>Rating: @exercise.Rating.ToString("F2")</h6>
+}

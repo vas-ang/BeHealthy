@@ -52,7 +52,7 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Create();
+                return this.View(inputModel);
             }
 
             string creatorId = this.userManager.GetUserId(this.User);
@@ -66,6 +66,7 @@
         {
             if (!await this.workoutService.WorkoutExistsAsync(workoutId))
             {
+                this.TempData["ErrorMessage"] = "Workout id is invalid";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 
@@ -73,6 +74,7 @@
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(workoutId, userId))
             {
+                this.TempData["ErrorMessage"] = "Workout id is invalid";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 
@@ -86,18 +88,20 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.RedirectToAction(nameof(this.Edit), inputModel.Id);
+                return this.View(inputModel);
             }
 
             if (!await this.workoutService.WorkoutExistsAsync(inputModel.Id))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid workout.";
+                return this.RedirectToAction(nameof(this.Schedule));
             }
 
             var userId = this.userManager.GetUserId(this.User);
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(inputModel.Id, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid workout.";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 
@@ -110,13 +114,15 @@
         {
             if (!await this.workoutService.WorkoutExistsAsync(workoutId))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid workout.";
+                return this.RedirectToAction(nameof(this.Schedule));
             }
 
             var userId = this.userManager.GetUserId(this.User);
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(workoutId, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid workout.";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 
@@ -131,6 +137,7 @@
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(workoutId, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid workout.";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 
@@ -158,35 +165,34 @@
         {
             if (!this.ModelState.IsValid)
             {
-                this.TempData["ErrorMessage"] = "Entered data is invalid.";
-                return this.RedirectToAction(nameof(this.AddExercise), new { inputModel.ExerciseId });
+                return this.View(inputModel);
             }
 
             if (!await this.exerciseService.ExerciseExistsAsync(inputModel.ExerciseId) ||
                 !await this.exerciseService.IsExercisePublishedAsync(inputModel.ExerciseId))
             {
-                this.TempData["ErrorMessage"] = "Exercise id is invalid.";
-                return this.RedirectToAction(nameof(this.AddExercise), new { inputModel.ExerciseId });
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                return this.RedirectToAction("Browse", "Exercises");
             }
 
             var userId = this.userManager.GetUserId(this.User);
 
             if (await this.workoutExerciseService.WorkoutExerciseExistsAsync(inputModel.WorkoutId, inputModel.ExerciseId))
             {
-                this.TempData["ErrorMessage"] = "This exercise is already bound to the selected workout.";
-                return this.RedirectToAction(nameof(this.AddExercise), new { inputModel.ExerciseId });
+                this.TempData["ErrorMessage"] = "Exercise is already in workout.";
+                return this.RedirectToAction("Browse", "Exercises");
             }
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(inputModel.WorkoutId, userId) ||
                 !await this.workoutService.WorkoutExistsAsync(inputModel.WorkoutId))
             {
-                this.TempData["ErrorMessage"] = "Workout id is invalid.";
-                return this.RedirectToAction(nameof(this.AddExercise), new { inputModel.ExerciseId });
+                this.TempData["ErrorMessage"] = "Invalid workout.";
+                return this.RedirectToAction("Browse", "Exercises");
             }
 
             await this.workoutExerciseService.AddWorkoutExerciseAsync(inputModel);
 
-            return this.Redirect("/Fitness/Exercises");
+            return this.RedirectToAction("Browse", "Exercises");
         }
 
         public async Task<IActionResult> RemoveExercise(string workoutId, string exerciseId)
@@ -195,7 +201,7 @@
 
             if (!await this.workoutService.IsUserWorkoutCreatorAsync(workoutId, userId))
             {
-                this.TempData["ErrorMessage"] = "Invalid workout id.";
+                this.TempData["ErrorMessage"] = "Invalid workout.";
                 return this.RedirectToAction(nameof(this.Schedule));
             }
 

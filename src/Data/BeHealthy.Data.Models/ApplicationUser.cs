@@ -20,8 +20,6 @@
             this.Workouts = new HashSet<Workout>();
         }
 
-        public string ProfilePicture { get; set; }
-
         public DateTime CreatedOn { get; set; }
 
         public DateTime? ModifiedOn { get; set; }

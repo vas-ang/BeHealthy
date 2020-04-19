@@ -1,4 +1,4 @@
-﻿namespace BeHealthy.Web.Infrastructure.ViewComponents
+﻿namespace BeHealthy.Web.ViewComponents
 {
     using System.Threading.Tasks;
 

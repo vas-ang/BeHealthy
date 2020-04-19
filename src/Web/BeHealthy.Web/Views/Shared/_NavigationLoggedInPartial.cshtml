@@ -6,4 +6,7 @@
     <li class="nav-item">
         <a class="nav-link text-dark" asp-area="Fitness" asp-controller="Workouts" asp-action="Schedule">Workouts</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Users" asp-action="Details" asp-route-username="@this.User.Identity.Name">My profile</a>
+    </li>
 }

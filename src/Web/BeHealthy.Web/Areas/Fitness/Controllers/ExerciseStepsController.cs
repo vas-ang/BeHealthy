@@ -39,46 +39,59 @@
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
             if (this.exerciseStepService.GetExerciseStepsCount(exerciseId) >= 10)
             {
+                this.TempData["ErrorMessage"] = $"Exercise cannot have more than {10} steps.";
                 return this.RedirectToAction("Details", "Exercises", new { exerciseId });
             }
 
-            this.TempData["ExerciseId"] = exerciseId;
+            var viewModel = new ExerciseStepCreateInputModel
+            {
+                ExerciseId = exerciseId,
+            };
 
-            return this.View();
+            return this.View(viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ExerciseStepCreateInputModel exerciseStepInputModel)
+        public async Task<IActionResult> Create(ExerciseStepCreateInputModel inputModel)
         {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(inputModel);
+            }
+
             var user = await this.userManager.GetUserAsync(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseStepInputModel.ExerciseId, user.Id))
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, user.Id))
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
-            if (this.exerciseStepService.GetExerciseStepsCount(exerciseStepInputModel.ExerciseId) >= 10)
+            if (this.exerciseStepService.GetExerciseStepsCount(inputModel.ExerciseId) >= 10)
             {
-                return this.RedirectToAction("Details", "Exercises", new { exerciseStepInputModel.ExerciseId });
+                this.TempData["ErrorMessage"] = $"Exercise cannot have more than {10} steps.";
+                return this.RedirectToAction("Details", "Exercises", new { inputModel.ExerciseId });
             }
 
-            var imageUrl = await this.cloudinaryService.UploadImageAsync($"{Guid.NewGuid()}_{user.UserName}", user.UserName, exerciseStepInputModel.ImageUpload);
+            var imageUrl = await this.cloudinaryService.UploadImageAsync($"{Guid.NewGuid()}_{user.UserName}", user.UserName, inputModel.ImageUpload);
 
-            await this.exerciseStepService.CreateExerciseStepAsync(exerciseStepInputModel, imageUrl);
+            await this.exerciseStepService.CreateExerciseStepAsync(inputModel, imageUrl);
 
-            return this.RedirectToAction("Details", "Exercises", new { exerciseStepInputModel.ExerciseId });
+            return this.RedirectToAction("Details", "Exercises", new { inputModel.ExerciseId });
         }
 
         public async Task<IActionResult> Edit(int exerciseStepId)
         {
             if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepId))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid exercise step.";
+                return this.RedirectToAction("Browse", "Exercises");
             }
 
             var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepId);
@@ -87,6 +100,7 @@
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
@@ -100,12 +114,13 @@
         {
             if (!this.ModelState.IsValid)
             {
-                return this.RedirectToAction(nameof(this.Edit));
+                return this.View(exerciseStepEditInputModel);
             }
 
             if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepEditInputModel.Id))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid exercise step.";
+                return this.RedirectToAction("Browse", "Exercises");
             }
 
             var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepEditInputModel.Id);
@@ -114,6 +129,7 @@
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, user.Id))
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
@@ -133,7 +149,8 @@
         {
             if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepId))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid exercise step.";
+                return this.RedirectToAction("Browse", "Exercises");
             }
 
             var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepId);
@@ -142,6 +159,7 @@
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction("Browse", "Exercises");
             }
 

@@ -24,6 +24,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\BeHealthy.Data.Models\BeHealthy.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\BeHealthy.Services.Mapping\BeHealthy.Services.Mapping.csproj" />
+    <ProjectReference Include="..\BeHealthy.Web.Infrastructure\BeHealthy.Web.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

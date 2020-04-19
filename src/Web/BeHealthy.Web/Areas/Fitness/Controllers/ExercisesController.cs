@@ -48,16 +48,16 @@
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ExerciseInputModel exerciseInputModel)
+        public async Task<IActionResult> Create(ExerciseInputModel inputModel)
         {
             if (!this.ModelState.IsValid)
             {
-                return this.Create();
+                return this.View(inputModel);
             }
 
             string creatorId = this.userManager.GetUserId(this.User);
 
-            string exerciseId = await this.exerciseService.CreateAsync(exerciseInputModel, creatorId);
+            string exerciseId = await this.exerciseService.CreateAsync(inputModel, creatorId);
 
             return this.RedirectToAction(nameof(this.Details), new { exerciseId });
         }
@@ -67,7 +67,8 @@
             // If the exercise is deleted, should not display.
             if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                return this.RedirectToAction(nameof(this.Browse));
             }
 
             var exerciseViewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
@@ -78,6 +79,7 @@
             // If user is not the creator of the exercise when it's not published, he/she cannot access that page.
             if (!exerciseViewModel.IsPublished && !isAccessorCreator)
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
@@ -93,13 +95,15 @@
             // If the exercise is deleted, should not display.
             if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
             {
-                return this.NotFound();
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                return this.RedirectToAction(nameof(this.Browse));
             }
 
             var accessorId = this.userManager.GetUserId(this.User);
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId))
             {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
                 return this.RedirectToAction(nameof(this.Browse));
             }
 

@@ -4,6 +4,7 @@
 
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Mapping;
+    using BeHealthy.Web.Infrastructure.ValidationAttributes;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -13,9 +14,11 @@
         [StringLength(20, ErrorMessage = "{0} should be between {2} and {1} characters long", MinimumLength = 4)]
         public string Heading { get; set; }
 
-        // TODO: think about data size!
-        [Display(Name = "Image", Description = "If you don't want new image leave blank.")]
+        [Required]
+        [Display(Name = "Image")]
         [DataType(DataType.Upload)]
+        [FileSize(4 * 1024 * 1024, "{0} size must be at max 4MB")]
+        [FileExtensions(ErrorMessage = "Unallowed file extension. Allowed extensions: .png .jpg .jpeg", Extensions = "png,jpg,jpeg")]
         public IFormFile ImageUpload { get; set; }
 
         [BindNever]

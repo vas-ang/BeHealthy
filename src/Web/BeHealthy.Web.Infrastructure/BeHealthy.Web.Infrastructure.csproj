@@ -24,7 +24,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\BeHealthy.Data.Models\BeHealthy.Data.Models.csproj" />
     <ProjectReference Include="..\..\Services\BeHealthy.Services.Data\BeHealthy.Services.Data.csproj" />
-    <ProjectReference Include="..\BeHealthy.Web.ViewModels\BeHealthy.Web.Dtos.csproj" />
   </ItemGroup>
 
 </Project>
