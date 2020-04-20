@@ -7,6 +7,7 @@
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
 
+    using BeHealthy.Common;
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Messaging;
     using Microsoft.AspNetCore.Authentication;
@@ -63,6 +64,8 @@
                 var result = await this.userManager.CreateAsync(user, this.Input.Password);
                 if (result.Succeeded)
                 {
+                    await this.userManager.AddToRoleAsync(user, GlobalConstants.UserRoleName);
+
                     this.logger.LogInformation("User created a new account with password.");
 
                     var code = await this.userManager.GenerateEmailConfirmationTokenAsync(user);

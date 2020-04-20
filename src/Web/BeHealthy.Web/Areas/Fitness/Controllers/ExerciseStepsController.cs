@@ -43,7 +43,7 @@
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
-            if (this.exerciseStepService.GetExerciseStepsCount(exerciseId) >= 10)
+            if (this.exerciseStepService.GetExerciseStepsCount(exerciseId) > 10)
             {
                 this.TempData["ErrorMessage"] = $"Exercise cannot have more than {10} steps.";
                 return this.RedirectToAction("Details", "Exercises", new { exerciseId });
@@ -73,7 +73,7 @@
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
-            if (this.exerciseStepService.GetExerciseStepsCount(inputModel.ExerciseId) >= 10)
+            if (this.exerciseStepService.GetExerciseStepsCount(inputModel.ExerciseId) > 10)
             {
                 this.TempData["ErrorMessage"] = $"Exercise cannot have more than {10} steps.";
                 return this.RedirectToAction("Details", "Exercises", new { inputModel.ExerciseId });

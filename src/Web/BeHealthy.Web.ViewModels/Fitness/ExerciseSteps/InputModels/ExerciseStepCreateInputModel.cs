@@ -7,6 +7,8 @@
     using BeHealthy.Web.Infrastructure.ValidationAttributes;
     using Microsoft.AspNetCore.Http;
 
+    using FileExtensions = BeHealthy.Web.Infrastructure.ValidationAttributes.FileExtensionsAttribute;
+
     public class ExerciseStepCreateInputModel : IMapTo<ExerciseStep>
     {
         [Required]
@@ -17,7 +19,7 @@
         [Display(Name = "Image")]
         [DataType(DataType.Upload)]
         [FileSize(4 * 1024 * 1024, "{0} size must be at max 4MB")]
-        [FileExtensions(ErrorMessage = "Unallowed file extension. Allowed extensions: .png .jpg .jpeg", Extensions = "png,jpg,jpeg")]
+        [FileExtensions(errorMessage: "Unallowed file extension. Allowed extensions: {2}", allowedExtensions: new string[] { ".png", ".jpg", ".jpeg" })]
         public IFormFile ImageUpload { get; set; }
 
         [Required]
