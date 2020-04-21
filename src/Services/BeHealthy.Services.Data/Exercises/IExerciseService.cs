@@ -25,8 +25,14 @@
 
         public Task<IEnumerable<T>> GetPublishedExercisesAsync<T, TKey>(int page, int perPage, Expression<Func<Exercise, TKey>> orderCriteria);
 
+        public int GetPublishedExercisesPagesCount(int perPage);
+
         public Task<IEnumerable<T>> GetPublishedExercisesWithTagAsync<T, TKey>(int page, int perPage, string tag, Expression<Func<Exercise, TKey>> orderCriteria);
 
+        public int GetPublishedExercisesWithTagPagesCount(int perPage, string tag);
+
         public Task<IEnumerable<T>> GetUnpublishedExercisesAsync<T>(string userId);
+
+        public Task DeleteExerciseAsync(string exerciseId);
     }
 }

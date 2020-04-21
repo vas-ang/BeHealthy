@@ -20,6 +20,12 @@
         [Route("{controller}/{username}")]
         public async Task<IActionResult> Details(string username)
         {
+            if (!this.userService.UserExists(username))
+            {
+                this.TempData["ErrorMessage"] = $"User {username} does not exist.";
+                return this.RedirectToAction("Index", "Home");
+            }
+
             var viewModel = await this.userService.GetUserDetailsAsync<UserDetailsViewModel>(username);
 
             return this.View(viewModel);

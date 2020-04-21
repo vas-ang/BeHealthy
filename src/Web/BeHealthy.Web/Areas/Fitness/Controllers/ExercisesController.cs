@@ -31,6 +31,9 @@
         {
             var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, x => x.CreatedOn);
 
+            this.TempData["Page"] = page;
+            this.TempData["LastPage"] = this.exerciseService.GetPublishedExercisesPagesCount(5);
+
             return this.View(viewModel);
         }
 
@@ -38,6 +41,10 @@
         public async Task<IActionResult> AllWithTag(int page, string tag)
         {
             var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, tag, x => x.CreatedOn);
+
+            this.TempData["Page"] = page;
+            this.TempData["Tag"] = tag;
+            this.TempData["LastPage"] = this.exerciseService.GetPublishedExercisesWithTagPagesCount(5, tag);
 
             return this.View(viewModel);
         }
@@ -110,6 +117,23 @@
             await this.exerciseService.ChangePublishState(exerciseId);
 
             return this.RedirectToAction(nameof(this.Details), new { exerciseId });
+        }
+
+        public async Task<IActionResult> Delete(string exerciseId)
+        {
+            var userId = this.userManager.GetUserId(this.User);
+
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
+            {
+                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                return this.RedirectToAction(nameof(this.Browse));
+            }
+
+            await this.exerciseService.DeleteExerciseAsync(exerciseId);
+
+            this.TempData["InfoMessage"] = "Deleted successfully.";
+
+            return this.RedirectToAction(nameof(this.Browse));
         }
     }
 }

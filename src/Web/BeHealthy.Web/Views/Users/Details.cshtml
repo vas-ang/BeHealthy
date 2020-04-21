@@ -4,13 +4,21 @@
     ViewData["Title"] = "Details";
 }
 
-@Model.UserName
+<h1 class="text-dark">@Model.UserName</h1>
+<h3>Member since: @Model.CreatedOn.ToString("d")</h3>
 
-Member since: @Model.CreatedOn
+<hr />
+
+<h4>Created exercises:</h4>
 
 @foreach (var exercise in Model.CreatedExercises)
 {
-    <h5>@exercise.Name</h5>
-    <h6>@exercise.Description</h6>
-    <h6>Rating: @exercise.Rating.ToString("F2")</h6>
+    <div class="card my-2">
+        <h5 class="card-header">@exercise.Name</h5>
+        <div class="card-body">
+            <h5 class="card-title">Rating: @exercise.Rating.ToString("f2") <i class="fa fa-star"></i></h5>
+            <p class="card-text">@exercise.Description</p>
+            <a asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id" class="btn btn-primary">Details</a>
+        </div>
+    </div>
 }

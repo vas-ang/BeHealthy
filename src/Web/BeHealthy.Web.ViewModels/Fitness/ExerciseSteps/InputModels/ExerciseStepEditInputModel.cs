@@ -16,15 +16,11 @@
         [StringLength(20, ErrorMessage = "{0} should be between {2} and {1} characters long", MinimumLength = 4)]
         public string Heading { get; set; }
 
-        [Required]
         [Display(Name = "Image")]
         [DataType(DataType.Upload)]
         [FileSize(4 * 1024 * 1024, "{0} size must be at max 4MB")]
         [FileExtensions(errorMessage: "Unallowed file extension. Allowed extensions: {2}", allowedExtensions: new string[] { ".png", ".jpg", ".jpeg" })]
         public IFormFile ImageUpload { get; set; }
-
-        [BindNever]
-        public string Image { get; set; }
 
         [Required]
         [StringLength(300, ErrorMessage = "{0} should be between {2} and {1} characters long", MinimumLength = 20)]
@@ -33,7 +29,6 @@
         [Required]
         public int Id { get; set; }
 
-        [Required]
         [BindNever]
         public string ExerciseId { get; set; }
     }

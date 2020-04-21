@@ -23,5 +23,10 @@
                 .Where(x => x.UserName == username)
                 .To<T>()
                 .FirstOrDefaultAsync();
+
+        public bool UserExists(string username)
+            => this.usersRepository
+                .AllAsNoTracking()
+                .Any(x => x.UserName == username);
     }
 }

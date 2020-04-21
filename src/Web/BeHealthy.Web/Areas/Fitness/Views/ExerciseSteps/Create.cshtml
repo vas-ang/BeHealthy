@@ -12,9 +12,10 @@
         <input asp-for="@Model.Heading" class="form-control" />
         <span asp-validation-for="@Model.Heading" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="@Model.ImageUpload"></label>
-        <input asp-for="@Model.ImageUpload" class="form-control" />
+    <p>Image</p>
+    <div class="custom-file">
+        <input asp-for="@Model.ImageUpload" class="custom-file-input">
+        <label asp-for="@Model.ImageUpload" class="custom-file-label">Choose image...</label>
         <span asp-validation-for="@Model.ImageUpload" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -25,6 +26,6 @@
 
     <input asp-for="@Model.ExerciseId" hidden>
 
-    <button type="submit" class="btn btn-primary float-left mx-2">Create</button>
-    <a class="btn btn-danger float-right mx-2" asp-area="Fitness" asp-controller="Exercises" asp-action="Edit" asp-route-exerciseId="@TempData["ExerciseId"]">Cancel</a>
+    <a class="btn btn-danger float-left" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@Model.ExerciseId">Cancel</a>
+    <button type="submit" class="btn btn-success float-right">Create</button>
 </form>

@@ -60,7 +60,7 @@
                 new Exercise
                 {
                     Name = "Incline barbell bench press",
-                    Creator = user,
+                    Creator = admin,
                     Description = "Pressing on an incline set-up works the clavicular head, which is why the incline barbell bench press makes your pecs pop.",
                     IsPublished = true,
                 },

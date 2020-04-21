@@ -17,6 +17,7 @@
         <select class="form-control dropdown" asp-for="@Model.Weekday" asp-items="@Html.GetEnumSelectList(typeof(BeHealthy.Data.Models.Enumerators.Weekday))"></select>
         <span asp-validation-for="@Model.Weekday" class="text-danger"></span>
     </div>
-    <input class="btn btn-success" type="submit" value="Create" />
-    <a class="btn btn-danger" asp-area="Fitness" asp-controller="Workouts" asp-action="Schedule">Back</a>
+
+    <a class="btn btn-danger float-left" asp-area="Fitness" asp-controller="Workouts" asp-action="Schedule">Back</a>
+    <input class="btn btn-success float-right" type="submit" value="Create" />
 </form>

@@ -34,9 +34,9 @@
         }
 
         public async Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId)
-            => (await this.exerciseRepository
+            => await this.exerciseRepository
                 .AllAsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == exerciseId))?.CreatorId == userId;
+                .FirstOrDefaultAsync(x => x.Id == exerciseId && x.CreatorId == userId) != null;
 
         public async Task<T> GetExerciseAsync<T>(string exerciseId)
             => await this.exerciseRepository
@@ -101,5 +101,27 @@
                 .Take(perPage)
                 .To<T>()
                 .ToArrayAsync();
+
+        public int GetPublishedExercisesPagesCount(int perPage)
+            => (int)Math.Ceiling(this.exerciseRepository
+                .AllAsNoTracking()
+                .Where(x => x.IsPublished)
+                .Count() / (double)perPage);
+
+        public int GetPublishedExercisesWithTagPagesCount(int perPage, string tag)
+             => (int)Math.Ceiling(this.exerciseRepository
+                .AllAsNoTracking()
+                .Where(x => x.ExerciseTags
+                    .Any(y => y.Tag.Name == tag) && x.IsPublished)
+                .Count() / (double)perPage);
+
+        public async Task DeleteExerciseAsync(string exerciseId)
+        {
+            var exercise = await this.exerciseRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseId);
+
+            this.exerciseRepository.Delete(exercise);
+
+            await this.exerciseRepository.SaveChangesAsync();
+        }
     }
 }
