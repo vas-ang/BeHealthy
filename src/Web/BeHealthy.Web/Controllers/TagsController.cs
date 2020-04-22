@@ -11,6 +11,8 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static BeHealthy.Common.GlobalConstants;
+
     [Authorize]
     [ApiController]
     [Route("/api/{controller}")]
@@ -30,16 +32,11 @@
         [HttpPost("Exercise")]
         public async Task<ActionResult<TagViewModel>> PostExerciseTag(ExerciseTagCreateInputModel inputModel)
         {
-            if (!await this.exerciseService.ExerciseExistsAsync(inputModel.ExerciseId))
-            {
-                return this.BadRequest();
-            }
-
             var userId = this.userManager.GetUserId(this.User);
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId))
             {
-                return this.Unauthorized();
+                return this.BadRequest();
             }
 
             if (await this.tagService.ExerciseTagExistsAsync(inputModel.ExerciseId, inputModel.TagName))
@@ -55,16 +52,11 @@
         [HttpDelete("Exercise")]
         public async Task<ActionResult> DeleteExerciseTag(ExerciseTagDeleteInputModel inputModel)
         {
-            if (!await this.exerciseService.ExerciseExistsAsync(inputModel.ExerciseId))
-            {
-                return this.BadRequest();
-            }
-
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId))
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
             {
-                return this.Unauthorized();
+                return this.BadRequest();
             }
 
             if (!await this.tagService.ExerciseTagExistsAsync(inputModel.ExerciseId, inputModel.TagId))

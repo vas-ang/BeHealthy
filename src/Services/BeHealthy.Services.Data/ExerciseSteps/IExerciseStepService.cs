@@ -6,7 +6,7 @@
     {
         public Task<int> CreateExerciseStepAsync<T>(T exerciseStepInputModel, string imgeUrl);
 
-        public int GetExerciseStepsCount(string exerciseId);
+        public Task<int> GetExerciseStepsCountAsync(string exerciseId);
 
         public Task<bool> ExerciseStepExistsAsync(int exerciseStepId);
 

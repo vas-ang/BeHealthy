@@ -12,6 +12,9 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static BeHealthy.Common.GlobalConstants;
+    using static BeHealthy.Common.Messages;
+
     [Authorize]
     [Area("Fitness")]
     public class ExerciseStepsController : Controller
@@ -39,13 +42,13 @@
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
-            if (this.exerciseStepService.GetExerciseStepsCount(exerciseId) > 10)
+            if (await this.exerciseStepService.GetExerciseStepsCountAsync(exerciseId) > MaxExerciseStepsCount)
             {
-                this.TempData["ErrorMessage"] = $"Exercise cannot have more than {10} steps.";
+                this.TempData[ErrorMessageKey] = string.Format(ExerciseStepMaxLimit, MaxExerciseStepsCount);
                 return this.RedirectToAction("Details", "Exercises", new { exerciseId });
             }
 
@@ -69,13 +72,13 @@
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, user.Id))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
-            if (this.exerciseStepService.GetExerciseStepsCount(inputModel.ExerciseId) > 10)
+            if (await this.exerciseStepService.GetExerciseStepsCountAsync(inputModel.ExerciseId) > MaxExerciseStepsCount)
             {
-                this.TempData["ErrorMessage"] = $"Exercise cannot have more than {10} steps.";
+                this.TempData[ErrorMessageKey] = string.Format(ExerciseStepMaxLimit, MaxExerciseStepsCount);
                 return this.RedirectToAction("Details", "Exercises", new { inputModel.ExerciseId });
             }
 
@@ -83,24 +86,20 @@
 
             await this.exerciseStepService.CreateExerciseStepAsync(inputModel, imageUrl);
 
+            this.TempData[InfoMessageKey] = CreatedSuccessfully;
+
             return this.RedirectToAction("Details", "Exercises", new { inputModel.ExerciseId });
         }
 
         public async Task<IActionResult> Edit(int exerciseStepId)
         {
-            if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepId))
-            {
-                this.TempData["ErrorMessage"] = "Invalid exercise step.";
-                return this.RedirectToAction("Browse", "Exercises");
-            }
-
             var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepId);
 
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExerciseStep;
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
@@ -117,19 +116,13 @@
                 return this.View(exerciseStepEditInputModel);
             }
 
-            if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepEditInputModel.Id))
-            {
-                this.TempData["ErrorMessage"] = "Invalid exercise step.";
-                return this.RedirectToAction("Browse", "Exercises");
-            }
-
             var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepEditInputModel.Id);
 
             var user = await this.userManager.GetUserAsync(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, user.Id))
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, user.Id) && !this.User.IsInRole(AdministratorRoleName))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExerciseStep;
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
@@ -142,28 +135,26 @@
 
             await this.exerciseStepService.UpdateExerciseStepAsync(exerciseStepEditInputModel, newImageUrl);
 
+            this.TempData[InfoMessageKey] = ChangesSavedSuccessfully;
+
             return this.RedirectToAction("Details", "Exercises", new { exerciseId });
         }
 
         public async Task<IActionResult> Delete(int exerciseStepId)
         {
-            if (!await this.exerciseStepService.ExerciseStepExistsAsync(exerciseStepId))
-            {
-                this.TempData["ErrorMessage"] = "Invalid exercise step.";
-                return this.RedirectToAction("Browse", "Exercises");
-            }
-
             var exerciseId = await this.exerciseService.GetExerciseIdByStepIdAsync(exerciseStepId);
 
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExerciseStep;
                 return this.RedirectToAction("Browse", "Exercises");
             }
 
             await this.exerciseStepService.DeleteExerciseStepAsync(exerciseStepId);
+
+            this.TempData[InfoMessageKey] = DeletedSuccessfully;
 
             return this.RedirectToAction("Details", "Exercises", new { exerciseId });
         }

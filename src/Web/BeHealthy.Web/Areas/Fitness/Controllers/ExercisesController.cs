@@ -11,6 +11,9 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
 
+    using static BeHealthy.Common.GlobalConstants;
+    using static BeHealthy.Common.Messages;
+
     [Authorize]
     [Area("Fitness")]
     public class ExercisesController : Controller
@@ -19,7 +22,10 @@
         private readonly IReviewService reviewService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ExercisesController(IExerciseService exerciseService, IReviewService reviewService, UserManager<ApplicationUser> userManager)
+        public ExercisesController(
+            IExerciseService exerciseService,
+            IReviewService reviewService,
+            UserManager<ApplicationUser> userManager)
         {
             this.exerciseService = exerciseService;
             this.reviewService = reviewService;
@@ -29,10 +35,10 @@
         [Route("/{area}/{controller}/{page:int:min(1)=1}")]
         public async Task<IActionResult> Browse(int page)
         {
-            var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, x => x.CreatedOn);
+            var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, x => x.CreatedOn);
 
-            this.TempData["Page"] = page;
-            this.TempData["LastPage"] = this.exerciseService.GetPublishedExercisesPagesCount(5);
+            this.TempData[CurrentPageKey] = page;
+            this.TempData[LastPageKey] = await this.exerciseService.GetPublishedExercisesPagesCountAsync(ElementsPerPage);
 
             return this.View(viewModel);
         }
@@ -40,11 +46,11 @@
         [Route("/{area}/{controller}/{tag}/{page:int:min(1)=1}")]
         public async Task<IActionResult> AllWithTag(int page, string tag)
         {
-            var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, 5, tag, x => x.CreatedOn);
+            var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, tag, x => x.CreatedOn);
 
-            this.TempData["Page"] = page;
-            this.TempData["Tag"] = tag;
-            this.TempData["LastPage"] = this.exerciseService.GetPublishedExercisesWithTagPagesCount(5, tag);
+            this.TempData[CurrentPageKey] = page;
+            this.TempData[TagKey] = tag;
+            this.TempData[LastPageKey] = await this.exerciseService.GetPublishedExercisesWithTagPagesCountAsync(ElementsPerPage, tag);
 
             return this.View(viewModel);
         }
@@ -66,55 +72,50 @@
 
             string exerciseId = await this.exerciseService.CreateAsync(inputModel, creatorId);
 
+            this.TempData[InfoMessageKey] = CreatedSuccessfully;
+
             return this.RedirectToAction(nameof(this.Details), new { exerciseId });
         }
 
         public async Task<IActionResult> Details(string exerciseId)
         {
-            // If the exercise is deleted, should not display.
-            if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
+            var viewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
+
+            if (viewModel == null)
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction(nameof(this.Browse));
             }
-
-            var exerciseViewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
 
             var accessor = await this.userManager.GetUserAsync(this.User);
             bool isAccessorCreator = await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessor.Id);
 
             // If user is not the creator of the exercise when it's not published, he/she cannot access that page.
-            if (!exerciseViewModel.IsPublished && !isAccessorCreator)
+            if (!viewModel.IsPublished && !isAccessorCreator && !this.User.IsInRole(AdministratorRoleName))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
-            exerciseViewModel.IsAcessorCreator = isAccessorCreator;
+            viewModel.IsAcessorCreator = isAccessorCreator;
+            viewModel.ExerciseReviewUserRating = await this.reviewService.GetExerciseReviewRatingAsync(exerciseId, accessor.Id);
 
-            exerciseViewModel.ExerciseReviewUserRating = await this.reviewService.GetExerciseReviewRatingAsync(exerciseId, accessor.Id);
-
-            return this.View(exerciseViewModel);
+            return this.View(viewModel);
         }
 
         public async Task<IActionResult> ChangePublishState(string exerciseId)
         {
-            // If the exercise is deleted, should not display.
-            if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
-            {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
-                return this.RedirectToAction(nameof(this.Browse));
-            }
-
             var accessorId = this.userManager.GetUserId(this.User);
 
             if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
             await this.exerciseService.ChangePublishState(exerciseId);
+
+            this.TempData[InfoMessageKey] = ChangesSavedSuccessfully;
 
             return this.RedirectToAction(nameof(this.Details), new { exerciseId });
         }
@@ -123,15 +124,15 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId))
+            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
             {
-                this.TempData["ErrorMessage"] = "Invalid exercise.";
+                this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
             await this.exerciseService.DeleteExerciseAsync(exerciseId);
 
-            this.TempData["InfoMessage"] = "Deleted successfully.";
+            this.TempData[InfoMessageKey] = DeletedSuccessfully;
 
             return this.RedirectToAction(nameof(this.Browse));
         }

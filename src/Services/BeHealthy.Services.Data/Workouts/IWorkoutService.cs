@@ -9,8 +9,6 @@
 
         public Task EditAsync<T>(T editInputModel);
 
-        public Task<bool> WorkoutExistsAsync(string workoutId);
-
         public Task<bool> IsUserWorkoutCreatorAsync(string workoutId, string userId);
 
         public Task DeleteWorkoutAsync(string workoutId);

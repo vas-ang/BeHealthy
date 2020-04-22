@@ -24,9 +24,9 @@
                 .To<T>()
                 .FirstOrDefaultAsync();
 
-        public bool UserExists(string username)
-            => this.usersRepository
+        public async Task<bool> UserExistsAsync(string username)
+            => await this.usersRepository
                 .AllAsNoTracking()
-                .Any(x => x.UserName == username);
+                .AnyAsync(x => x.UserName == username);
     }
 }

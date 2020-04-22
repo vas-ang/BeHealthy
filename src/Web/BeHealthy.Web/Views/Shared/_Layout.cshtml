@@ -45,19 +45,19 @@
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" class="pb-3">
-            @if (this.TempData["ErrorMessage"] != null)
+            @if (this.TempData[GlobalConstants.ErrorMessageKey] != null)
             {
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>@this.TempData["ErrorMessage"]</strong>
+                    <strong>@this.TempData[GlobalConstants.ErrorMessageKey]</strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
             }
-            else if (this.TempData["InfoMessage"] != null)
+            else if (this.TempData[GlobalConstants.InfoMessageKey] != null)
             {
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>@this.TempData["InfoMessage"]</strong>
+                    <strong>@this.TempData[GlobalConstants.InfoMessageKey]</strong>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

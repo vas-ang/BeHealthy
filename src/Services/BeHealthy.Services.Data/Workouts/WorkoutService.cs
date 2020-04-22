@@ -69,9 +69,6 @@
             .FirstOrDefaultAsync();
 
         public async Task<bool> IsUserWorkoutCreatorAsync(string workoutId, string userId)
-            => await this.workoutsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == workoutId && x.CreatorId == userId) != null;
-
-        public async Task<bool> WorkoutExistsAsync(string workoutId)
-            => await this.workoutsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == workoutId) != null;
+            => await this.workoutsRepository.AllAsNoTracking().AnyAsync(x => x.Id == workoutId && x.CreatorId == userId);
     }
 }

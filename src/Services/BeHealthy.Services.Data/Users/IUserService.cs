@@ -6,6 +6,6 @@
     {
         public Task<T> GetUserDetailsAsync<T>(string username);
 
-        public bool UserExists(string username);
+        public Task<bool> UserExistsAsync(string username);
     }
 }

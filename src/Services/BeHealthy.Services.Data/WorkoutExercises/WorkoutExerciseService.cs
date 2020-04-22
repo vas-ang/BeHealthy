@@ -43,6 +43,6 @@
         }
 
         public async Task<bool> WorkoutExerciseExistsAsync(string workoutId, string exerciseId)
-            => await this.workoutExercisesRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.WorkoutId == workoutId && x.ExerciseId == exerciseId) != null;
+            => await this.workoutExercisesRepository.AllAsNoTracking().AnyAsync(x => x.WorkoutId == workoutId && x.ExerciseId == exerciseId);
     }
 }

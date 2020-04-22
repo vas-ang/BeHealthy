@@ -62,9 +62,9 @@
         }
 
         public async Task<bool> ExerciseTagExistsAsync(string exerciseId, string name)
-            => await this.exerciseTagsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId && x.Tag.Name == name) != null;
+            => await this.exerciseTagsRepository.AllAsNoTracking().AnyAsync(x => x.ExerciseId == exerciseId && x.Tag.Name == name);
 
         public async Task<bool> ExerciseTagExistsAsync(string exerciseId, int tagId)
-            => await this.exerciseTagsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId && x.TagId == tagId) != null;
+            => await this.exerciseTagsRepository.AllAsNoTracking().AnyAsync(x => x.ExerciseId == exerciseId && x.TagId == tagId);
     }
 }

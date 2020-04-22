@@ -1,12 +1,12 @@
 ﻿// Reserved ids: tagInput, tagForm(for csrfToken), tagContainer
 
-function main(exerciseId) {
+function mainTags(exerciseId) {
     document.addEventListener("DOMContentLoaded", onLoad.bind(undefined, exerciseId));
 }
 
 function onLoad(exerciseId) {
     const tagInput = document.getElementById("tagInput");
-    const csrfToken = document.querySelector("#tagForm > input[type=hidden]:nth-child(2)").value;
+    const csrfToken = document.querySelector("#tagForm > input[name=__RequestVerificationToken]").value;
     const container = document.getElementById("tagContainer");
 
     const clickEventHandler = {

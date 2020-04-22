@@ -7,6 +7,8 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
+    using static BeHealthy.Common.GlobalConstants;
+
     [Authorize]
     public class UsersController : Controller
     {
@@ -20,9 +22,9 @@
         [Route("{controller}/{username}")]
         public async Task<IActionResult> Details(string username)
         {
-            if (!this.userService.UserExists(username))
+            if (!await this.userService.UserExistsAsync(username))
             {
-                this.TempData["ErrorMessage"] = $"User {username} does not exist.";
+                this.TempData[ErrorMessageKey] = $"User {username} does not exist.";
                 return this.RedirectToAction("Index", "Home");
             }
 

@@ -40,13 +40,13 @@
         }
 
         public async Task<bool> ExerciseStepExistsAsync(int exerciseStepId)
-            => await this.exerciseStepRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.Id == exerciseStepId) != null;
+            => await this.exerciseStepRepository.AllAsNoTracking().AnyAsync(x => x.Id == exerciseStepId);
 
         public async Task<T> GetExerciseStepAsync<T>(int exerciseStepId)
             => await this.exerciseStepRepository.AllAsNoTracking().Where(x => x.Id == exerciseStepId).To<T>().FirstOrDefaultAsync();
 
-        public int GetExerciseStepsCount(string exerciseId)
-            => this.exerciseStepRepository.AllAsNoTracking().Where(x => x.ExerciseId == exerciseId).Count();
+        public async Task<int> GetExerciseStepsCountAsync(string exerciseId)
+            => await this.exerciseStepRepository.AllAsNoTracking().Where(x => x.ExerciseId == exerciseId).CountAsync();
 
         public async Task UpdateExerciseStepAsync<T>(T inputModel, string imageUrl)
         {

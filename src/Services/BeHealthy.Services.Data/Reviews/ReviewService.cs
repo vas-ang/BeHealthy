@@ -59,7 +59,7 @@
         }
 
         public async Task<bool> ExerciseReviewExistsAsync(string exerciseId, string userId)
-            => await this.exerciseReviewsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId && x.AuthorId == userId) != null;
+            => await this.exerciseReviewsRepository.AllAsNoTracking().AnyAsync(x => x.ExerciseId == exerciseId && x.AuthorId == userId);
 
         public async Task<int> GetExerciseReviewRatingAsync(string exerciseId, string userId)
             => await this.exerciseReviewsRepository

@@ -61,12 +61,14 @@
         public async Task<bool> ExerciseExistsAsync(string exerciseId)
             => await this.exerciseRepository
                 .AllAsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == exerciseId) != null;
+                .AnyAsync(x => x.Id == exerciseId);
 
         public async Task<string> GetExerciseIdByStepIdAsync(int exerciseStepId)
-            => (await this.exerciseRepository
+            => await this.exerciseRepository
                 .AllAsNoTracking()
-                .FirstOrDefaultAsync(x => x.ExerciseSteps.Any(es => es.Id == exerciseStepId)))?.Id;
+                .Where(x => x.ExerciseSteps.Any(es => es.Id == exerciseStepId))
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
 
         public async Task<IEnumerable<T>> GetPublishedExercisesAsync<T, TKey>(int page, int perPage, Expression<Func<Exercise, TKey>> orderCriteria)
             => await this.exerciseRepository
@@ -87,9 +89,9 @@
                 .ToArrayAsync();
 
         public async Task<bool> IsExercisePublishedAsync(string exerciseId)
-            => (await this.exerciseRepository
+            => await this.exerciseRepository
                 .AllAsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == exerciseId))?.IsPublished == true;
+                .AnyAsync(x => x.Id == exerciseId && x.IsPublished);
 
         public async Task<IEnumerable<T>> GetPublishedExercisesWithTagAsync<T, TKey>(int page, int perPage, string tag, Expression<Func<Exercise, TKey>> orderCriteria)
             => await this.exerciseRepository
@@ -102,18 +104,18 @@
                 .To<T>()
                 .ToArrayAsync();
 
-        public int GetPublishedExercisesPagesCount(int perPage)
-            => (int)Math.Ceiling(this.exerciseRepository
+        public async Task<int> GetPublishedExercisesPagesCountAsync(int perPage)
+            => (int)Math.Ceiling(await this.exerciseRepository
                 .AllAsNoTracking()
                 .Where(x => x.IsPublished)
-                .Count() / (double)perPage);
+                .CountAsync() / (double)perPage);
 
-        public int GetPublishedExercisesWithTagPagesCount(int perPage, string tag)
-             => (int)Math.Ceiling(this.exerciseRepository
+        public async Task<int> GetPublishedExercisesWithTagPagesCountAsync(int perPage, string tag)
+             => (int)Math.Ceiling(await this.exerciseRepository
                 .AllAsNoTracking()
                 .Where(x => x.ExerciseTags
                     .Any(y => y.Tag.Name == tag) && x.IsPublished)
-                .Count() / (double)perPage);
+                .CountAsync() / (double)perPage);
 
         public async Task DeleteExerciseAsync(string exerciseId)
         {
