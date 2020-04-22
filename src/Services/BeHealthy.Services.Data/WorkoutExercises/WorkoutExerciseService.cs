@@ -1,6 +1,5 @@
 ﻿namespace BeHealthy.Services.Data.WorkoutExercises
 {
-    using System;
     using System.Threading.Tasks;
 
     using BeHealthy.Data.Common.Repositories;

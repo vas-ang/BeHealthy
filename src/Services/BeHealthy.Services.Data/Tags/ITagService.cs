@@ -1,6 +1,5 @@
 ﻿namespace BeHealthy.Services.Data.Tags
 {
-    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface ITagService

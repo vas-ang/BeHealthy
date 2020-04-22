@@ -36,7 +36,7 @@
         public async Task<bool> IsUserExerciseCreatorAsync(string exerciseId, string userId)
             => await this.exerciseRepository
                 .AllAsNoTracking()
-                .FirstOrDefaultAsync(x => x.Id == exerciseId && x.CreatorId == userId) != null;
+                .AnyAsync(x => x.Id == exerciseId && x.CreatorId == userId);
 
         public async Task<T> GetExerciseAsync<T>(string exerciseId)
             => await this.exerciseRepository

@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\BeHealthy.Services.Data.Tests.Models\BeHealthy.Services.Data.Tests.Models.csproj" />
     <ProjectReference Include="..\..\Data\BeHealthy.Data\BeHealthy.Data.csproj" />
     <ProjectReference Include="..\..\Services\BeHealthy.Services.Data\BeHealthy.Services.Data.csproj" />
   </ItemGroup>

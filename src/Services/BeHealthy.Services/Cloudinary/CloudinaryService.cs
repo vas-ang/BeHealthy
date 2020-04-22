@@ -1,6 +1,5 @@
 ﻿namespace BeHealthy.Services.Cloudinary
 {
-    using System.IO;
     using System.Threading.Tasks;
 
     using CloudinaryDotNet;

@@ -35,7 +35,7 @@
 
         public async Task DeleteExerciseReviewAsync(string exerciseId, string userId)
         {
-            var exerciseReview = await this.exerciseReviewsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId || x.AuthorId == userId);
+            var exerciseReview = await this.exerciseReviewsRepository.AllAsNoTracking().FirstOrDefaultAsync(x => x.ExerciseId == exerciseId && x.AuthorId == userId);
 
             this.exerciseReviewsRepository.Delete(exerciseReview);
 
