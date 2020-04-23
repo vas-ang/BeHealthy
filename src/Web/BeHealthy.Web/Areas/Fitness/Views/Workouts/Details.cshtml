@@ -11,18 +11,51 @@
 <hr />
 
 <h3>Exercises</h3>
-@foreach (var exercise in Model.WorkoutExercises)
+@if (!Model.WorkoutExercises.Any())
 {
-    <div class="card my-2">
-        <h5 class="card-header">@exercise.ExerciseName</h5>
-        <div class="card-body">
-            <h6 class="card-title">@exercise.ExerciseDescription</h6>
-            <p class="card-text">@exercise.Sets Sets</p>
-            <p class="card-text">@exercise.Repetitions Repetitions</p>
-            <a class="btn btn-primary float-left" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.ExerciseId">Details</a>
-            <a class="btn btn-danger float-right" asp-area="Fitness" asp-controller="Workouts" asp-action="RemoveExercise" asp-route-exerciseId="@exercise.ExerciseId" asp-route-workoutId="@Model.Id">Delete</a>
+    <p>There are currently no exercises. <a class="text-dark" asp-area="Fitness" asp-controller="Exercises" asp-action="Browse">Browse for some!</a></p>
+}
+else
+{
+    @foreach (var exercise in Model.WorkoutExercises)
+    {
+        <div class="card my-2">
+            <h5 class="card-header">@exercise.ExerciseName</h5>
+            <div class="card-body">
+                <h6 class="card-title">@exercise.ExerciseDescription</h6>
+                <p class="card-text">@exercise.Sets Sets</p>
+                <p class="card-text">
+                    @if (exercise.Repetitions != 0)
+                    {
+                        @exercise.Repetitions @:Repetitions
+                    }
+                    else
+                    {
+                        @: To Failiure
+                    }
+                </p>
+                <a class="btn btn-primary float-left" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.ExerciseId">Details</a>
+                <a class="btn btn-danger float-right" href="#" data-toggle="modal" data-target="#confirm-delete-@exercise.ExerciseId">Delete</a>
+
+                <div class="modal fade" id="confirm-delete-@exercise.ExerciseId" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Confirm Delete
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete @exercise.ExerciseName?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <a class="btn btn-danger float-right" asp-area="Fitness" asp-controller="Workouts" asp-action="RemoveExercise" asp-route-exerciseId="@exercise.ExerciseId" asp-route-workoutId="@Model.Id">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    }
 }
 
 <h3>Actions</h3>

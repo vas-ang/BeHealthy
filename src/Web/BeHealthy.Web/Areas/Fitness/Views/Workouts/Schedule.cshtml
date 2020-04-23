@@ -1,6 +1,5 @@
 ﻿@model IEnumerable<WorkoutViewModel>
 
-
 @{
     ViewData["Title"] = "Schedule";
 }
@@ -9,20 +8,27 @@
 <hr />
 <div class="row">
     <div class="col-md-10">
-        @foreach (Weekday weekday in Enum.GetValues(typeof(Weekday)))
+        @if (!Model.Any())
         {
-            @if (Model.Any(x => x.Weekday == weekday))
+            <p>There are no workouts yet.</p>
+        }
+        else
+        {
+            @foreach (Weekday weekday in Enum.GetValues(typeof(Weekday)))
             {
-                <h2>@weekday</h2>
-                <hr />
-                @foreach (var workout in Model.Where(x => x.Weekday == weekday))
+                @if (Model.Any(x => x.Weekday == weekday))
                 {
-                    <div class="card my-2">
-                        <h5 class="card-header">@workout.Name</h5>
-                        <div class="card-body">
-                            <a asp-area="Fitness" asp-controller="Workouts" asp-action="Details" asp-route-workoutId="@workout.Id" class="btn btn-primary">Details</a>
+                    <h2>@weekday</h2>
+                    <hr />
+                    @foreach (var workout in Model.Where(x => x.Weekday == weekday))
+                    {
+                        <div class="card my-2">
+                            <h5 class="card-header">@workout.Name</h5>
+                            <div class="card-body">
+                                <a asp-area="Fitness" asp-controller="Workouts" asp-action="Details" asp-route-workoutId="@workout.Id" class="btn btn-primary">Details</a>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
             }
         }

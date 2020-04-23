@@ -19,7 +19,7 @@
             this.userService = userService;
         }
 
-        [Route("{controller}/{username}")]
+        [Route("{controller}/{username:required}")]
         public async Task<IActionResult> Details(string username)
         {
             if (!await this.userService.UserExistsAsync(username))

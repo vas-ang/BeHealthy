@@ -11,48 +11,55 @@
 <div class="shadow-none p-3 mb-5 bg-light rounded">@Model.Description</div>
 
 <h4>Steps</h4>
-
-<div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-    <ol class="carousel-indicators">
-        @for (int i = 0; i < Model.ExerciseSteps.Count(); i++)
-        {
-            <li data-target="#carouselExampleCaptions" data-slide-to="@i"
-                @if (i == 0) { @: class="active"
-                }></li>
-        }
-    </ol>
-    <div class="carousel-inner">
-        @foreach (var step in Model.ExerciseSteps)
-        {
-            <div class="carousel-item @if(first){
+@if (!Model.ExerciseSteps.Any())
+{
+    <p>There are currently no exercise steps.</p>
+}
+else
+{
+    <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            @for (int i = 0; i < Model.ExerciseSteps.Count(); i++)
+            {
+                <li data-target="#carouselExampleCaptions" data-slide-to="@i"
+                    @if (i == 0) { @: class="active"
+                    }></li>
+            }
+        </ol>
+        <div class="carousel-inner">
+            @foreach (var step in Model.ExerciseSteps)
+            {
+                <div class="carousel-item @if(first){
                  @:active
                  first = false;
                  }">
-                <img src="@step.Image" class="d-block w-75 h-auto" alt="@step.Heading">
-                <div class="carousel-caption d-none d-md-block bg-dark">
-                    <h5>@step.Heading</h5>
-                    <p>@step.Description</p>
-                    @if (Model.IsAcessorCreator || isAdministrator)
-                    {
-                        <a class="btn btn-warning float-left mx-md-3" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Edit" asp-route-exerciseStepId="@step.Id">Edit</a>
-                        <a class="btn btn-danger float-right mx-md-3" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Delete" asp-route-exerciseStepId="@step.Id">Delete</a>
-                    }
+                    <img src="@step.Image" class="d-block w-75 h-auto" alt="@step.Heading">
+                    <div class="carousel-caption d-none d-md-block bg-dark">
+                        <h5>@step.Heading</h5>
+                        <p>@step.Description</p>
+                        @if (Model.IsAcessorCreator || isAdministrator)
+                        {
+                            <a class="btn btn-warning float-left mx-md-3" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Edit" asp-route-exerciseStepId="@step.Id">Edit</a>
+                            <a class="btn btn-danger float-right mx-md-3" asp-area="Fitness" asp-controller="ExerciseSteps" asp-action="Delete" asp-route-exerciseStepId="@step.Id">Delete</a>
+                        }
+                    </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
-    <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
+}
 
 <div id="tagContainer" class="shadow p-3 mb-5 bg-white rounded">
     <h4 id="preview" for="tags">Tags</h4>
+
     @foreach (var tag in Model.ExerciseTags)
     {
         <div class="btn btn-primary">

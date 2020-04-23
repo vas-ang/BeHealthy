@@ -4,6 +4,7 @@
 
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Data.Exercises;
+    using BeHealthy.Services.Data.ExerciseSteps;
     using BeHealthy.Services.Data.Reviews;
     using BeHealthy.Web.Dtos.Fitness.Exercises.InputModels;
     using BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels;
@@ -19,6 +20,7 @@
     public class ExercisesController : Controller
     {
         private readonly IExerciseService exerciseService;
+        private readonly IExerciseStepService exerciseStepService;
         private readonly IReviewService reviewService;
         private readonly UserManager<ApplicationUser> userManager;
 
@@ -35,22 +37,36 @@
         [Route("/{area}/{controller}/{page:int:min(1)=1}")]
         public async Task<IActionResult> Browse(int page)
         {
+            var lastPage = await this.exerciseService.GetPublishedExercisesPagesCountAsync(ElementsPerPage);
+
+            if (lastPage < page && lastPage != 0)
+            {
+                return this.RedirectToAction(nameof(this.Browse), new { page = 1 });
+            }
+
             var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, x => x.CreatedOn);
 
             this.TempData[CurrentPageKey] = page;
-            this.TempData[LastPageKey] = await this.exerciseService.GetPublishedExercisesPagesCountAsync(ElementsPerPage);
+            this.TempData[LastPageKey] = lastPage;
 
             return this.View(viewModel);
         }
 
-        [Route("/{area}/{controller}/{tag}/{page:int:min(1)=1}")]
+        [Route("/{area}/{controller}/{tag:regex(^[[a-z\\-]]+$)}/{page:int:min(1)=1}")]
         public async Task<IActionResult> AllWithTag(int page, string tag)
         {
+            var lastPage = await this.exerciseService.GetPublishedExercisesWithTagPagesCountAsync(ElementsPerPage, tag);
+
+            if (lastPage < page && lastPage != 0)
+            {
+                return this.RedirectToAction(nameof(this.AllWithTag), new { page = 1, tag = tag });
+            }
+
             var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, tag, x => x.CreatedOn);
 
             this.TempData[CurrentPageKey] = page;
             this.TempData[TagKey] = tag;
-            this.TempData[LastPageKey] = await this.exerciseService.GetPublishedExercisesWithTagPagesCountAsync(ElementsPerPage, tag);
+            this.TempData[LastPageKey] = lastPage;
 
             return this.View(viewModel);
         }

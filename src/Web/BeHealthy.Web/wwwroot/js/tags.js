@@ -43,14 +43,17 @@ function onLoad(exerciseId) {
         }
     })
 
-    tagInput.addEventListener("keypress", btnDownEventHandler.bind(undefined, exerciseId, csrfToken, container));
-
+    tagInput.addEventListener("keypress", btnDownEventHandler.bind(undefined, exerciseId, csrfToken, container, tagInput));
 }
 
-function btnDownEventHandler(exerciseId, csrfToken, container, e) {
-    if (e.code === "Space" && e.target.value.trim() !== "") {
-        const inputValue = e.target.value.toLocaleLowerCase().trim();
-        e.target.value = "";
+function btnDownEventHandler(exerciseId, csrfToken, container, tagInput, e) {
+    if (e.code === "Space") {
+        const inputValue = tagInput.value.toLocaleLowerCase().trim();
+        tagInput.value = "";
+
+        if (inputValue.match(/^[a-z\-]+$/g) === null) {
+            return;
+        }
 
         const json = {
             "exerciseId": exerciseId,

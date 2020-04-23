@@ -69,14 +69,12 @@ function onLoad(grade) {
                     body: JSON.stringify(jsonData.exerciseId)
                 })
                     .then((response) => {
-                        if (response.ok) {
-                            return response.json();
-                        } else {
+                        if (!response.ok){
                             throw new Error('Something went wrong');
                         }
                     })
                     .then(x => { jsonData.rating = 0; lastGrade = 0; })
-                    .catch(error => console.log(error));
+                    .catch(console.log);
             }
         }
     });

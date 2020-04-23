@@ -16,6 +16,7 @@
         public const string InfoMessageKey = "InfoMessage";
 
         public const int MaxExerciseStepsCount = 10;
+        public const int MinExerciseStepsCount = 1;
         public const int ElementsPerPage = 5;
     }
 }

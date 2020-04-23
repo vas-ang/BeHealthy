@@ -8,22 +8,22 @@
     <h1>Add exercise to workout</h1>
     <hr />
     <div class="form-group">
-        <label asp-for="@Model.WorkoutId"></label>
-        <select asp-for="@Model.WorkoutId" asp-items="@((IEnumerable<WorkoutSelectListItemViewModel>)this.TempData["WorkoutSelectListItems"])" class="form-control"></select>
-        <span asp-validation-for="@Model.WorkoutId" class="text-danger"></span>
+        <label asp-for="WorkoutId"></label>
+        <select asp-for="WorkoutId" asp-items="@((IEnumerable<WorkoutSelectListItemViewModel>)this.TempData["WorkoutSelectListItems"])" class="form-control"></select>
+        <span asp-validation-for="WorkoutId" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="@Model.Sets"></label>
-        <input asp-for="@Model.Sets" class="form-control" />
-        <span asp-validation-for="@Model.Sets" class="text-danger"></span>
+        <label asp-for="Sets"></label>
+        <input asp-for="Sets" class="form-control" />
+        <span asp-validation-for="Sets" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="@Model.Repetitions"></label>
-        <input asp-for="@Model.Repetitions" class="form-control" />
-        <span asp-validation-for="@Model.Repetitions" class="text-danger"></span>
+        <label asp-for="Repetitions"></label>
+        <input asp-for="Repetitions" class="form-control" />
+        <span asp-validation-for="Repetitions" class="text-danger"></span>
     </div>
 
-    <input hidden asp-for="@Model.ExerciseId" />
+    <input hidden asp-for="ExerciseId" />
 
     <a class="btn btn-danger float-left" asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@Model.ExerciseId">Back</a>
     <input type="submit" class="btn btn-success float-right" value="Add" />

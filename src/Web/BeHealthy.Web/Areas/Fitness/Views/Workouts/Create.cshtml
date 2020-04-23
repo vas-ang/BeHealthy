@@ -8,14 +8,14 @@
     <h1>Create a workout</h1>
     <hr />
     <div class="form-group">
-        <label asp-for="@Model.Name"></label>
-        <input asp-for="@Model.Name" class="form-control" />
-        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="@Model.Weekday"></label>
-        <select class="form-control dropdown" asp-for="@Model.Weekday" asp-items="@Html.GetEnumSelectList(typeof(BeHealthy.Data.Models.Enumerators.Weekday))"></select>
-        <span asp-validation-for="@Model.Weekday" class="text-danger"></span>
+        <label asp-for="Weekday"></label>
+        <select class="form-control dropdown" asp-for="Weekday" asp-items="@Html.GetEnumSelectList(typeof(BeHealthy.Data.Models.Enumerators.Weekday))"></select>
+        <span asp-validation-for="Weekday" class="text-danger"></span>
     </div>
 
     <a class="btn btn-danger float-left" asp-area="Fitness" asp-controller="Workouts" asp-action="Schedule">Back</a>

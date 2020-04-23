@@ -11,14 +11,21 @@
 
 <h4>Created exercises:</h4>
 
-@foreach (var exercise in Model.CreatedExercises)
+@if (!Model.CreatedExercises.Any())
 {
-    <div class="card my-2">
-        <h5 class="card-header">@exercise.Name</h5>
-        <div class="card-body">
-            <h5 class="card-title">Rating: @exercise.Rating.ToString("f2") <i class="fa fa-star"></i></h5>
-            <p class="card-text">@exercise.Description</p>
-            <a asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id" class="btn btn-primary">Details</a>
+    <p>@Model.UserName has not yet created an exercise.</p>
+}
+else
+{
+    @foreach (var exercise in Model.CreatedExercises)
+    {
+        <div class="card my-2">
+            <h5 class="card-header">@exercise.Name</h5>
+            <div class="card-body">
+                <h5 class="card-title">Rating: @exercise.Rating.ToString("f2") <i class="fa fa-star"></i></h5>
+                <p class="card-text">@exercise.Description</p>
+                <a asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id" class="btn btn-primary">Details</a>
+            </div>
         </div>
-    </div>
+    }
 }
