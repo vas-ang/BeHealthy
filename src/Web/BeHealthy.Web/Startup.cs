@@ -11,7 +11,7 @@
     using BeHealthy.Services.Cloudinary;
     using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Services.Data.ExerciseSteps;
-    using BeHealthy.Services.Data.Reviews;
+    using BeHealthy.Services.Data.Ratings;
     using BeHealthy.Services.Data.Tags;
     using BeHealthy.Services.Data.Users;
     using BeHealthy.Services.Data.WorkoutExercises;
@@ -55,7 +55,8 @@
                         options.MinimumSameSitePolicy = SameSiteMode.Strict;
                     });
 
-            services.Configure<CookieTempDataProviderOptions>(options => {
+            services.Configure<CookieTempDataProviderOptions>(options =>
+            {
                 options.Cookie.IsEssential = true;
             });
 
@@ -80,7 +81,7 @@
             services.AddTransient<IExerciseService, ExerciseService>();
             services.AddTransient<IExerciseStepService, ExerciseStepService>();
             services.AddTransient<ITagService, TagService>();
-            services.AddTransient<IReviewService, ReviewService>();
+            services.AddTransient<IRatingsService, RatingsService>();
             services.AddTransient<IWorkoutService, WorkoutService>();
             services.AddTransient<IWorkoutExerciseService, WorkoutExerciseService>();
             services.AddTransient<IUserService, UserService>();

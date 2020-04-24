@@ -26,7 +26,7 @@
 
         public DbSet<Exercise> Exercises { get; set; }
 
-        public DbSet<ExerciseReview> ExerciseReviews { get; set; }
+        public DbSet<ExerciseRating> ExerciseRatings { get; set; }
 
         public DbSet<ExerciseStep> ExerciseSteps { get; set; }
 

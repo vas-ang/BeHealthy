@@ -4,9 +4,9 @@
 
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Data.Exercises;
-    using BeHealthy.Services.Data.Reviews;
-    using BeHealthy.Web.Dtos.Reviews.InputModels;
-    using BeHealthy.Web.Dtos.Reviews.ViewModels;
+    using BeHealthy.Services.Data.Ratings;
+    using BeHealthy.Web.Dtos.Ratings.InputModels;
+    using BeHealthy.Web.Dtos.Ratings.ViewModels;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
@@ -14,13 +14,13 @@
     [Authorize]
     [ApiController]
     [Route("/api/{controller}")]
-    public class ReviewsController : ControllerBase
+    public class RatingsController : ControllerBase
     {
-        private readonly IReviewService reviewService;
+        private readonly IRatingsService reviewService;
         private readonly IExerciseService exerciseService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ReviewsController(IReviewService reviewService, IExerciseService exerciseService, UserManager<ApplicationUser> userManager)
+        public RatingsController(IRatingsService reviewService, IExerciseService exerciseService, UserManager<ApplicationUser> userManager)
         {
             this.reviewService = reviewService;
             this.exerciseService = exerciseService;
@@ -28,7 +28,7 @@
         }
 
         [HttpPost("Exercise")]
-        public async Task<ActionResult<ExerciseReviewViewModel>> PostExerciseReview(ExerciseReviewInputModel inputModel)
+        public async Task<ActionResult<ExerciseRatingViewModel>> PostExerciseReview(ExerciseRatingInputModel inputModel)
         {
             if (!await this.exerciseService.ExerciseExistsAsync(inputModel.ExerciseId))
             {
@@ -52,13 +52,13 @@
                 return this.BadRequest();
             }
 
-            var viewModel = await this.reviewService.CreateExerciseReviewAsync<ExerciseReviewInputModel, ExerciseReviewViewModel>(inputModel, userId);
+            var viewModel = await this.reviewService.CreateExerciseReviewAsync<ExerciseRatingInputModel, ExerciseRatingViewModel>(inputModel, userId);
 
             return this.Created("api/Reviews/Exercise", viewModel);
         }
 
         [HttpPut("Exercise")]
-        public async Task<ActionResult<ExerciseReviewViewModel>> PutExerciseReview(ExerciseReviewInputModel inputModel)
+        public async Task<ActionResult<ExerciseRatingViewModel>> PutExerciseReview(ExerciseRatingInputModel inputModel)
         {
             if (!await this.exerciseService.ExerciseExistsAsync(inputModel.ExerciseId))
             {
@@ -82,13 +82,13 @@
                 return this.BadRequest();
             }
 
-            var viewModel = await this.reviewService.EditExerciseReviewAsync<ExerciseReviewInputModel, ExerciseReviewViewModel>(inputModel, userId);
+            var viewModel = await this.reviewService.EditExerciseReviewAsync<ExerciseRatingInputModel, ExerciseRatingViewModel>(inputModel, userId);
 
             return this.Created("api/Reviews/Exercise", viewModel);
         }
 
         [HttpDelete("Exercise")]
-        public async Task<ActionResult<ExerciseReviewViewModel>> DeleteExerciseReview([FromBody]string exerciseId)
+        public async Task<ActionResult<ExerciseRatingViewModel>> DeleteExerciseReview([FromBody]string exerciseId)
         {
             if (!await this.exerciseService.ExerciseExistsAsync(exerciseId))
             {

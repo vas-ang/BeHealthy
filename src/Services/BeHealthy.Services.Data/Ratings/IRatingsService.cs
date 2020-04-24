@@ -1,8 +1,8 @@
-﻿namespace BeHealthy.Services.Data.Reviews
+﻿namespace BeHealthy.Services.Data.Ratings
 {
     using System.Threading.Tasks;
 
-    public interface IReviewService
+    public interface IRatingsService
     {
         public Task<TOutput> CreateExerciseReviewAsync<TInput, TOutput>(TInput inputModel, string userId);
 

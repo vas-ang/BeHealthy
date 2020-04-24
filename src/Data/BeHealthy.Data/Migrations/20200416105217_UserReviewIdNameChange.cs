@@ -8,31 +8,31 @@
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_ExerciseReviews_AspNetUsers_UserId",
-                table: "ExerciseReviews");
+                table: "ExerciseRatings");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_ExerciseReviews",
-                table: "ExerciseReviews");
+                table: "ExerciseRatings");
 
             migrationBuilder.DropColumn(
                 name: "UserId",
-                table: "ExerciseReviews");
+                table: "ExerciseRatings");
 
             migrationBuilder.AddColumn<string>(
-                name: "AuthorId",
-                table: "ExerciseReviews",
+                name: "UserId",
+                table: "ExerciseRatings",
                 nullable: false,
                 defaultValue: string.Empty);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ExerciseReviews",
-                table: "ExerciseReviews",
-                columns: new[] { "AuthorId", "ExerciseId" });
+                table: "ExerciseRatings",
+                columns: new[] { "UserId", "ExerciseId" });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ExerciseReviews_AspNetUsers_AuthorId",
-                table: "ExerciseReviews",
-                column: "AuthorId",
+                table: "ExerciseRatings",
+                column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -42,31 +42,31 @@
         {
             migrationBuilder.DropForeignKey(
                 name: "FK_ExerciseReviews_AspNetUsers_AuthorId",
-                table: "ExerciseReviews");
+                table: "ExerciseRatings");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_ExerciseReviews",
-                table: "ExerciseReviews");
+                table: "ExerciseRatings");
 
             migrationBuilder.DropColumn(
-                name: "AuthorId",
-                table: "ExerciseReviews");
+                name: "UserId",
+                table: "ExerciseRatings");
 
             migrationBuilder.AddColumn<string>(
                 name: "UserId",
-                table: "ExerciseReviews",
+                table: "ExerciseRatings",
                 type: "nvarchar(450)",
                 nullable: false,
                 defaultValue: string.Empty);
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ExerciseReviews",
-                table: "ExerciseReviews",
+                table: "ExerciseRatings",
                 columns: new[] { "UserId", "ExerciseId" });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_ExerciseReviews_AspNetUsers_UserId",
-                table: "ExerciseReviews",
+                table: "ExerciseRatings",
                 column: "UserId",
                 principalTable: "AspNetUsers",
                 principalColumn: "Id",

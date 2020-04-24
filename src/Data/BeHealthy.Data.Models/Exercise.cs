@@ -12,7 +12,7 @@
             this.Id = Guid.NewGuid().ToString();
             this.ExerciseSteps = new HashSet<ExerciseStep>();
             this.ExerciseTags = new HashSet<ExerciseTag>();
-            this.ExerciseReviews = new HashSet<ExerciseReview>();
+            this.ExerciseReviews = new HashSet<ExerciseRating>();
         }
 
         public string Name { get; set; }
@@ -29,6 +29,6 @@
 
         public virtual ICollection<ExerciseTag> ExerciseTags { get; set; }
 
-        public virtual ICollection<ExerciseReview> ExerciseReviews { get; set; }
+        public virtual ICollection<ExerciseRating> ExerciseReviews { get; set; }
     }
 }

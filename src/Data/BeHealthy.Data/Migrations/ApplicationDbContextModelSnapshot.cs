@@ -180,9 +180,9 @@ namespace BeHealthy.Data.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseReview", b =>
+            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseRating", b =>
                 {
-                    b.Property<string>("AuthorId")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ExerciseId")
@@ -191,11 +191,11 @@ namespace BeHealthy.Data.Migrations
                     b.Property<int>("Rating")
                         .HasColumnType("int");
 
-                    b.HasKey("AuthorId", "ExerciseId");
+                    b.HasKey("UserId", "ExerciseId");
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("ExerciseReviews");
+                    b.ToTable("ExerciseRatings");
                 });
 
             modelBuilder.Entity("BeHealthy.Data.Models.ExerciseStep", b =>
@@ -456,17 +456,17 @@ namespace BeHealthy.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseReview", b =>
+            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseRating", b =>
                 {
-                    b.HasOne("BeHealthy.Data.Models.ApplicationUser", "Author")
-                        .WithMany("ExerciseReviews")
-                        .HasForeignKey("AuthorId")
+                    b.HasOne("BeHealthy.Data.Models.Exercise", "Exercise")
+                        .WithMany("ExerciseRatings")
+                        .HasForeignKey("ExerciseId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BeHealthy.Data.Models.Exercise", "Exercise")
-                        .WithMany("ExerciseReviews")
-                        .HasForeignKey("ExerciseId")
+                    b.HasOne("BeHealthy.Data.Models.ApplicationUser", "User")
+                        .WithMany("ExerciseRatings")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -5,7 +5,7 @@
     using BeHealthy.Data.Models;
     using BeHealthy.Services.Data.Exercises;
     using BeHealthy.Services.Data.ExerciseSteps;
-    using BeHealthy.Services.Data.Reviews;
+    using BeHealthy.Services.Data.Ratings;
     using BeHealthy.Web.Dtos.Fitness.Exercises.InputModels;
     using BeHealthy.Web.Dtos.Fitness.Exercises.ViewModels;
     using Microsoft.AspNetCore.Authorization;
@@ -20,13 +20,12 @@
     public class ExercisesController : Controller
     {
         private readonly IExerciseService exerciseService;
-        private readonly IExerciseStepService exerciseStepService;
-        private readonly IReviewService reviewService;
+        private readonly IRatingsService reviewService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ExercisesController(
             IExerciseService exerciseService,
-            IReviewService reviewService,
+            IRatingsService reviewService,
             UserManager<ApplicationUser> userManager)
         {
             this.exerciseService = exerciseService;
@@ -59,7 +58,7 @@
 
             if (lastPage < page && lastPage != 0)
             {
-                return this.RedirectToAction(nameof(this.AllWithTag), new { page = 1, tag = tag });
+                return this.RedirectToAction(nameof(this.AllWithTag), new { page = 1, tag });
             }
 
             var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, tag, x => x.CreatedOn);

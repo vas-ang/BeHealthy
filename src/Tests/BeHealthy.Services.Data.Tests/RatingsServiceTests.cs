@@ -6,42 +6,41 @@
     using BeHealthy.Data;
     using BeHealthy.Data.Models;
     using BeHealthy.Data.Repositories;
-    using BeHealthy.Services.Data.Reviews;
-    using BeHealthy.Services.Data.Tests.Models.Review;
+    using BeHealthy.Services.Data.Ratings;
+    using BeHealthy.Services.Data.Tests.Models.Ratings;
     using BeHealthy.Services.Mapping;
     using Microsoft.EntityFrameworkCore;
     using Xunit;
 
-    public class ReviewServiceTests
+    public class RatingsServiceTests
     {
         private const string Invalid = "invalid";
         private const string ExerciseId = "exercise";
         private const string AuthorId = "author";
         private readonly ApplicationDbContext db;
-        private readonly EfRepository<ExerciseReview> exerciseReviewRepository;
-        private readonly ReviewService reviewService;
+        private readonly RatingsService reviewService;
 
-        public ReviewServiceTests()
+        public RatingsServiceTests()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                .UseInMemoryDatabase(Guid.NewGuid().ToString());
             this.db = new ApplicationDbContext(options.Options);
-            this.exerciseReviewRepository = new EfRepository<ExerciseReview>(this.db);
-            this.reviewService = new ReviewService(this.exerciseReviewRepository);
+            var exerciseRatingsRepository = new EfRepository<ExerciseRating>(this.db);
+            this.reviewService = new RatingsService(exerciseRatingsRepository);
 
-            AutoMapperConfig.RegisterMappings(typeof(ReviewInputTestModel).Assembly);
+            AutoMapperConfig.RegisterMappings(typeof(RatingInputTestModel).Assembly);
         }
 
         [Fact]
         public async Task CreateExerciseReviewWorks()
         {
-            var inputModel = new ReviewInputTestModel
+            var inputModel = new RatingInputTestModel
             {
                 Rating = 3,
                 ExerciseId = ExerciseId,
             };
 
-            var actual = await this.reviewService.CreateExerciseReviewAsync<ReviewInputTestModel, ReviewOutputTestModel>(inputModel, AuthorId);
+            var actual = await this.reviewService.CreateExerciseReviewAsync<RatingInputTestModel, RatingOutputTestModel>(inputModel, AuthorId);
 
             Assert.Equal(3, actual.Rating);
             Assert.Equal(ExerciseId, actual.ExerciseId);
@@ -52,11 +51,11 @@
         {
             await this.SeedAsync();
 
-            var expected = await this.db.ExerciseReviews.CountAsync() - 1;
+            var expected = await this.db.ExerciseRatings.CountAsync() - 1;
 
             await this.reviewService.DeleteExerciseReviewAsync(ExerciseId, AuthorId);
 
-            var actual = await this.db.ExerciseReviews.CountAsync();
+            var actual = await this.db.ExerciseRatings.CountAsync();
 
             Assert.Equal(expected, actual);
         }
@@ -66,13 +65,13 @@
         {
             await this.SeedAsync();
 
-            var inputModel = new ReviewInputTestModel
+            var inputModel = new RatingInputTestModel
             {
                 Rating = 3,
                 ExerciseId = ExerciseId,
             };
 
-            var actual = await this.reviewService.EditExerciseReviewAsync<ReviewInputTestModel, ReviewOutputTestModel>(inputModel, AuthorId);
+            var actual = await this.reviewService.EditExerciseReviewAsync<RatingInputTestModel, RatingOutputTestModel>(inputModel, AuthorId);
 
             Assert.Equal(inputModel.Rating, actual.Rating);
         }
@@ -103,16 +102,16 @@
 
         private async Task SeedAsync()
         {
-            await this.db.ExerciseReviews.AddAsync(new ExerciseReview
+            await this.db.ExerciseRatings.AddAsync(new ExerciseRating
             {
-                AuthorId = AuthorId,
+                UserId = AuthorId,
                 ExerciseId = ExerciseId,
                 Rating = 5,
             });
 
             await this.db.SaveChangesAsync();
 
-            await this.db.ExerciseReviews.ForEachAsync(x => this.db.Entry(x).State = EntityState.Detached);
+            await this.db.ExerciseRatings.ForEachAsync(x => this.db.Entry(x).State = EntityState.Detached);
         }
     }
 }

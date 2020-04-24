@@ -7,11 +7,11 @@
     using BeHealthy.Data.Models;
     using Microsoft.EntityFrameworkCore;
 
-    public class ExerciseReviewsSeeder : ISeeder
+    public class ExerciseRatingsSeeder : ISeeder
     {
         public async Task SeedAsync(ApplicationDbContext dbContext, IServiceProvider serviceProvider)
         {
-            if (dbContext.ExerciseReviews.Any())
+            if (dbContext.ExerciseRatings.Any())
             {
                 return;
             }
@@ -24,9 +24,9 @@
 
             foreach (var exercise in exercises)
             {
-                await dbContext.ExerciseReviews.AddAsync(new ExerciseReview
+                await dbContext.ExerciseRatings.AddAsync(new ExerciseRating
                 {
-                    Author = user,
+                    User = user,
                     Exercise = exercise,
                     Rating = random.Next(1, 6),
                 });

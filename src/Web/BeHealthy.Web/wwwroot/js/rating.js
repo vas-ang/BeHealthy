@@ -35,7 +35,7 @@ function onLoad(grade) {
 
                 jsonData.rating = clickedNumber;
 
-                fetch("/api/Reviews/Exercise", {
+                fetch("/api/Ratings/Exercise", {
                     method: method,
                     mode: "cors",
                     cache: "no-cache",
@@ -57,7 +57,7 @@ function onLoad(grade) {
                     .catch(error => { console.log(error); jsonData.rating = lastGrade; });
             } else {
 
-                fetch("/api/Reviews/Exercise", {
+                fetch("/api/Ratings/Exercise", {
                     method: "DELETE",
                     mode: "cors",
                     cache: "no-cache",

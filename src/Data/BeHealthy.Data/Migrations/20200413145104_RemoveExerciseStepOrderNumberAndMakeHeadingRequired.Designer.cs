@@ -185,7 +185,7 @@ namespace BeHealthy.Data.Migrations
                     b.ToTable("Exercises");
                 });
 
-            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseReview", b =>
+            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseRating", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -203,7 +203,7 @@ namespace BeHealthy.Data.Migrations
 
                     b.HasIndex("ExerciseId");
 
-                    b.ToTable("ExerciseReviews");
+                    b.ToTable("ExerciseRatings");
                 });
 
             modelBuilder.Entity("BeHealthy.Data.Models.ExerciseStep", b =>
@@ -407,7 +407,7 @@ namespace BeHealthy.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseReview", b =>
+            modelBuilder.Entity("BeHealthy.Data.Models.ExerciseRating", b =>
                 {
                     b.HasOne("BeHealthy.Data.Models.Exercise", "Exercise")
                         .WithMany()
@@ -416,7 +416,7 @@ namespace BeHealthy.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("BeHealthy.Data.Models.ApplicationUser", "User")
-                        .WithMany("ExerciseReviews")
+                        .WithMany("ExerciseRatings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();

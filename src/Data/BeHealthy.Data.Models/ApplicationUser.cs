@@ -16,7 +16,7 @@
             this.Claims = new HashSet<IdentityUserClaim<string>>();
             this.Logins = new HashSet<IdentityUserLogin<string>>();
             this.CreatedExercises = new HashSet<Exercise>();
-            this.ExerciseReviews = new HashSet<ExerciseReview>();
+            this.ExerciseReviews = new HashSet<ExerciseRating>();
             this.Workouts = new HashSet<Workout>();
         }
 
@@ -36,7 +36,7 @@
 
         public virtual ICollection<Exercise> CreatedExercises { get; set; }
 
-        public virtual ICollection<ExerciseReview> ExerciseReviews { get; set; }
+        public virtual ICollection<ExerciseRating> ExerciseReviews { get; set; }
 
         public virtual ICollection<Workout> Workouts { get; set; }
     }

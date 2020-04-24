@@ -8,14 +8,14 @@
         {
             migrationBuilder.DropColumn(
                 name: "Comment",
-                table: "ExerciseReviews");
+                table: "ExerciseRatings");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
                 name: "Comment",
-                table: "ExerciseReviews",
+                table: "ExerciseRatings",
                 type: "nvarchar(max)",
                 nullable: true);
         }

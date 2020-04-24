@@ -205,7 +205,7 @@
                 });
 
             migrationBuilder.CreateTable(
-                name: "ExerciseReviews",
+                name: "ExerciseRatings",
                 columns: table => new
                 {
                     UserId = table.Column<string>(nullable: false),
@@ -332,7 +332,7 @@
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExerciseReviews_ExerciseId",
-                table: "ExerciseReviews",
+                table: "ExerciseRatings",
                 column: "ExerciseId");
 
             migrationBuilder.CreateIndex(
@@ -384,7 +384,7 @@
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ExerciseReviews");
+                name: "ExerciseRatings");
 
             migrationBuilder.DropTable(
                 name: "ExerciseSteps");
