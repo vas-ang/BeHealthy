@@ -140,7 +140,7 @@
                 ExerciseId = exerciseId,
             };
 
-            this.TempData["WorkoutSelectListItems"] = await this.workoutService.GetAllUserWorkoutsAsync<WorkoutSelectListItemViewModel>(userId);
+            this.ViewData["WorkoutSelectListItems"] = await this.workoutService.GetAllUserWorkoutsAsync<WorkoutSelectListItemViewModel>(userId);
 
             return this.View(viewModel);
         }

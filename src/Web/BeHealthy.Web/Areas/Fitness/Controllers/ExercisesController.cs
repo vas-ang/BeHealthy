@@ -46,8 +46,8 @@
 
             var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, x => x.CreatedOn);
 
-            this.TempData[CurrentPageKey] = page;
-            this.TempData[LastPageKey] = lastPage;
+            this.ViewData[CurrentPageKey] = page;
+            this.ViewData[LastPageKey] = lastPage;
 
             return this.View(viewModel);
         }
@@ -64,9 +64,9 @@
 
             var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, tag, x => x.CreatedOn);
 
-            this.TempData[CurrentPageKey] = page;
-            this.TempData[TagKey] = tag;
-            this.TempData[LastPageKey] = lastPage;
+            this.ViewData[CurrentPageKey] = page;
+            this.ViewData[TagKey] = tag;
+            this.ViewData[LastPageKey] = lastPage;
 
             return this.View(viewModel);
         }

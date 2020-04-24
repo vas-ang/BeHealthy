@@ -1,4 +1,11 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function changeFileInputLabel() {
+    document.addEventListener("DOMContentLoaded", function () {
+        var input = document.querySelector('.custom-file-input');
 
-// Write your JavaScript code.
+        input.addEventListener('change', function (e) {
+            var fileName = input.files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    });
+}

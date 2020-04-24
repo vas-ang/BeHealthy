@@ -80,6 +80,9 @@ function btnDownEventHandler(exerciseId, csrfToken, container, tagInput, e) {
             })
             .then(x => container.appendChild(createTag(x)))
             .catch(error => console.log(error));
+    } else if (e.keyCode == 13) {
+        e.preventDefault();
+        return false;
     }
 }
 

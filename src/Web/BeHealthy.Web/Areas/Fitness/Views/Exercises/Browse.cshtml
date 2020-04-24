@@ -22,25 +22,24 @@
         }
     </div>
     <div class="col-md-2">
-        <strong>You want to share an exercise idea? <a class="btn btn-info" asp-area="Fitness" asp-controller="Exercises" asp-action="Create">Click here!</a></strong>
-        <hr />
+        <strong>You want to share an exercise idea? <a class="btn btn-primary" asp-area="Fitness" asp-controller="Exercises" asp-action="Create">Click here!</a></strong>
         @await Component.InvokeAsync("UnpublishedExercises")
     </div>
 </div>
 
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-md-center">
-        @if ((int)this.TempData["Page"] - 1 >= 1)
+        @if ((int)this.ViewData["Page"] - 1 >= 1)
         {
-            <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" asp-route-page="@((int)this.TempData["Page"] - 1)" class="page-link">Previous</a></li>
+            <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" asp-route-page="@((int)this.ViewData["Page"] - 1)" class="page-link">Previous</a></li>
         }
         else
         {
             <li class="page-item disabled"><a class="page-link" disabled>Previous</a></li>
         }
-        @for (int p = 1; p <= (int)this.TempData["LastPage"]; p++)
+        @for (int p = 1; p <= (int)this.ViewData["LastPage"]; p++)
         {
-            @if (p == (int)this.TempData["Page"])
+            @if (p == (int)this.ViewData["Page"])
             {
                 <li class="page-item active"><a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" asp-route-page="@p" class="page-link">@p</a></li>
             }
@@ -49,9 +48,9 @@
                 <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" asp-route-page="@p" class="page-link">@p</a></li>
             }
         }
-        @if ((int)this.TempData["Page"] + 1 <= (int)this.TempData["LastPage"])
+        @if ((int)this.ViewData["Page"] + 1 <= (int)this.ViewData["LastPage"])
         {
-            <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" asp-route-page="@((int)this.TempData["Page"] + 1)" class="page-link">Next</a></li>
+            <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" asp-route-page="@((int)this.ViewData["Page"] + 1)" class="page-link">Next</a></li>
         }
         else
         {

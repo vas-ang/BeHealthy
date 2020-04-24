@@ -10,27 +10,30 @@
     <div class="col-md-10">
         @if (!Model.Any())
         {
-            <p>There are no workouts yet.</p>
+            <h2>There are no workouts yet.</h2>
         }
         else
         {
-            @foreach (Weekday weekday in Enum.GetValues(typeof(Weekday)))
-            {
-                @if (Model.Any(x => x.Weekday == weekday))
+            <div class="row">
+                @foreach (Weekday weekday in Enum.GetValues(typeof(Weekday)))
                 {
-                    <h2>@weekday</h2>
-                    <hr />
-                    @foreach (var workout in Model.Where(x => x.Weekday == weekday))
+                    var exercises = Model.Where(x => x.Weekday == weekday);
+
+                    @if (exercises.Count() > 0)
                     {
-                        <div class="card my-2">
-                            <h5 class="card-header">@workout.Name</h5>
-                            <div class="card-body">
-                                <a asp-area="Fitness" asp-controller="Workouts" asp-action="Details" asp-route-workoutId="@workout.Id" class="btn btn-primary">Details</a>
+                        <div class="list-group my-md-2 col-md-4">
+                            <div class="list-group-item bg-info text-white">
+                                <h5 class="d-inline">@weekday</h5>
+                                <span class="badge badge-primary badge-pill">@exercises.Count() Exercises</span>
                             </div>
+                            @foreach (var workout in exercises)
+                            {
+                                <a asp-area="Fitness" asp-controller="Workouts" asp-action="Details" asp-route-workoutId="@workout.Id" class="list-group-item list-group-item-action">@workout.Name</a>
+                            }
                         </div>
                     }
                 }
-            }
+            </div>
         }
     </div>
     <div class="col-md-2">

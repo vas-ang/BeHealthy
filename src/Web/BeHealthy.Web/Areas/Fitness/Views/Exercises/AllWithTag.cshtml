@@ -4,58 +4,65 @@
     ViewData["Title"] = "Browse";
 }
 
-<h1>Results for tag: @this.TempData["Tag"]</h1>
+<h1>Results for tag: @this.ViewData["Tag"]</h1>
 <hr />
-<div class="row">
-    <div class="col-md-10">
-        @foreach (var exercise in Model)
-        {
-            <div class="card my-2">
-                <h5 class="card-header">@exercise.Name</h5>
-                <div class="card-body">
-                    <h5 class="card-title">Creator: <a asp-area="" asp-controller="Users" asp-action="Details" asp-route-username="@exercise.CreatorUserName" class="text-dark">@exercise.CreatorUserName</a></h5>
-                    <h6 class="card-title">Rating: @exercise.Rating.ToString("f2") <i class="fa fa-star"></i></h6>
-                    <p class="card-text">@exercise.Description</p>
-                    <a asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id" class="btn btn-primary">Details</a>
-                </div>
-            </div>
-        }
-    </div>
-    <div class="col-md-2">
-        <strong>You want to share an exercise idea? <a class="btn btn-info" asp-area="Fitness" asp-controller="Exercises" asp-action="Create">Click here!</a></strong>
-        <hr />
-        @await Component.InvokeAsync("UnpublishedExercises")
-    </div>
-</div>
-
-<nav aria-label="Page navigation">
-    <ul class="pagination justify-content-md-center">
-        @if ((int)this.TempData["Page"] - 1 >= 1)
-        {
-            <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@((int)this.TempData["Page"] - 1)" asp-route-tag="@this.TempData["Tag"]" class="page-link">Previous</a></li>
-        }
-        else
-        {
-            <li class="page-item disabled"><a class="page-link" disabled>Previous</a></li>
-        }
-        @for (int p = 1; p <= (int)this.TempData["LastPage"]; p++)
-        {
-            @if (p == (int)this.TempData["Page"])
+@if (!Model.Any())
+{
+    <h2>No results found. <a asp-area="Fitness" asp-controller="Exercises" asp-action="Browse" class="btn btn-primary">To Browse</a></h2>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-10">
+            @foreach (var exercise in Model)
             {
-                <li class="page-item active"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@p" class="page-link" asp-route-tag="@this.TempData["Tag"]">@p</a></li>
+                <div class="card my-2">
+                    <h5 class="card-header">@exercise.Name</h5>
+                    <div class="card-body">
+                        <h5 class="card-title">Creator: <a asp-area="" asp-controller="Users" asp-action="Details" asp-route-username="@exercise.CreatorUserName" class="text-dark">@exercise.CreatorUserName</a></h5>
+                        <h6 class="card-title">Rating: @exercise.Rating.ToString("f2") <i class="fa fa-star"></i></h6>
+                        <p class="card-text">@exercise.Description</p>
+                        <a asp-area="Fitness" asp-controller="Exercises" asp-action="Details" asp-route-exerciseId="@exercise.Id" class="btn btn-primary">Details</a>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-2">
+            <strong>You want to share an exercise idea? <a class="btn btn-primary" asp-area="Fitness" asp-controller="Exercises" asp-action="Create">Click here!</a></strong>
+            <hr />
+            @await Component.InvokeAsync("UnpublishedExercises")
+        </div>
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-md-center">
+            @if ((int)this.ViewData["Page"] - 1 >= 1)
+            {
+                <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@((int)this.ViewData["Page"] - 1)" asp-route-tag="@this.ViewData["Tag"]" class="page-link">Previous</a></li>
             }
             else
             {
-                <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@p" class="page-link" asp-route-tag="@this.TempData["Tag"]">@p</a></li>
+                <li class="page-item disabled"><a class="page-link" disabled>Previous</a></li>
             }
-        }
-        @if ((int)this.TempData["Page"] + 1 <= (int)this.TempData["LastPage"])
-        {
-            <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@((int)this.TempData["Page"] + 1)" asp-route-tag="@this.TempData["Tag"]" class="page-link">Next</a></li>
-        }
-        else
-        {
-            <li class="page-item disabled"><a class="page-link">Next</a></li>
-        }
-    </ul>
-</nav>
+            @for (int p = 1; p <= (int)this.ViewData["LastPage"]; p++)
+            {
+                @if (p == (int)this.ViewData["Page"])
+                {
+                    <li class="page-item active"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@p" class="page-link" asp-route-tag="@this.ViewData["Tag"]">@p</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@p" class="page-link" asp-route-tag="@this.ViewData["Tag"]">@p</a></li>
+                }
+            }
+            @if ((int)this.ViewData["Page"] + 1 <= (int)this.ViewData["LastPage"])
+            {
+                <li class="page-item"><a asp-area="Fitness" asp-controller="Exercises" asp-action="AllWithTag" asp-route-page="@((int)this.ViewData["Page"] + 1)" asp-route-tag="@this.ViewData["Tag"]" class="page-link">Next</a></li>
+            }
+            else
+            {
+                <li class="page-item disabled"><a class="page-link">Next</a></li>
+            }
+        </ul>
+    </nav>
+}

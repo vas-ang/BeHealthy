@@ -55,6 +55,10 @@
                         options.MinimumSameSitePolicy = SameSiteMode.Strict;
                     });
 
+            services.Configure<CookieTempDataProviderOptions>(options => {
+                options.Cookie.IsEssential = true;
+            });
+
             services.AddControllersWithViews(configure =>
             {
                 configure.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
