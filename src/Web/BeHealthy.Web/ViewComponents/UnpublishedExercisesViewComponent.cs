@@ -11,12 +11,12 @@
     [ViewComponent(Name = "UnpublishedExercises")]
     public class UnpublishedExercisesViewComponent : ViewComponent
     {
-        private readonly IExerciseService exerciseService;
+        private readonly IExercisesService exercisesService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public UnpublishedExercisesViewComponent(IExerciseService exerciseService, UserManager<ApplicationUser> userManager)
+        public UnpublishedExercisesViewComponent(IExercisesService exerciseService, UserManager<ApplicationUser> userManager)
         {
-            this.exerciseService = exerciseService;
+            this.exercisesService = exerciseService;
             this.userManager = userManager;
         }
 
@@ -24,7 +24,7 @@
         {
             var userId = this.userManager.GetUserId(this.UserClaimsPrincipal);
 
-            var viewModel = await this.exerciseService.GetUnpublishedExercisesAsync<UnpublishedExerciseViewModel>(userId);
+            var viewModel = await this.exercisesService.GetUnpublishedExercisesAsync<UnpublishedExerciseViewModel>(userId);
 
             return this.View(viewModel);
         }

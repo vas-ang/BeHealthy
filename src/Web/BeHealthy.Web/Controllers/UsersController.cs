@@ -12,23 +12,23 @@
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IUsersService usersService;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUsersService userService)
         {
-            this.userService = userService;
+            this.usersService = userService;
         }
 
         [Route("{controller}/{username:required}")]
         public async Task<IActionResult> Details(string username)
         {
-            if (!await this.userService.UserExistsAsync(username))
+            if (!await this.usersService.UserExistsAsync(username))
             {
                 this.TempData[ErrorMessageKey] = $"User {username} does not exist.";
                 return this.RedirectToAction("Index", "Home");
             }
 
-            var viewModel = await this.userService.GetUserDetailsAsync<UserDetailsViewModel>(username);
+            var viewModel = await this.usersService.GetUserDetailsAsync<UserDetailsViewModel>(username);
 
             return this.View(viewModel);
         }

@@ -19,31 +19,31 @@
     [Area("Fitness")]
     public class ExercisesController : Controller
     {
-        private readonly IExerciseService exerciseService;
-        private readonly IRatingsService reviewService;
+        private readonly IExercisesService exercisesService;
+        private readonly IRatingsService reviewsService;
         private readonly UserManager<ApplicationUser> userManager;
 
         public ExercisesController(
-            IExerciseService exerciseService,
+            IExercisesService exerciseService,
             IRatingsService reviewService,
             UserManager<ApplicationUser> userManager)
         {
-            this.exerciseService = exerciseService;
-            this.reviewService = reviewService;
+            this.exercisesService = exerciseService;
+            this.reviewsService = reviewService;
             this.userManager = userManager;
         }
 
         [Route("/{area}/{controller}/{page:int:min(1)=1}")]
         public async Task<IActionResult> Browse(int page)
         {
-            var lastPage = await this.exerciseService.GetPublishedExercisesPagesCountAsync(ElementsPerPage);
+            var lastPage = await this.exercisesService.GetPublishedExercisesPagesCountAsync(ElementsPerPage);
 
             if (lastPage < page && lastPage != 0)
             {
                 return this.RedirectToAction(nameof(this.Browse), new { page = 1 });
             }
 
-            var viewModel = await this.exerciseService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, x => x.CreatedOn);
+            var viewModel = await this.exercisesService.GetPublishedExercisesAsync<ExerciseListItemViewModel, System.DateTime?>(page, ElementsPerPage, x => x.ModifiedOn);
 
             this.ViewData[CurrentPageKey] = page;
             this.ViewData[LastPageKey] = lastPage;
@@ -54,14 +54,14 @@
         [Route("/{area}/{controller}/{tag:regex(^[[a-z\\-]]+$)}/{page:int:min(1)=1}")]
         public async Task<IActionResult> AllWithTag(int page, string tag)
         {
-            var lastPage = await this.exerciseService.GetPublishedExercisesWithTagPagesCountAsync(ElementsPerPage, tag);
+            var lastPage = await this.exercisesService.GetPublishedExercisesWithTagPagesCountAsync(ElementsPerPage, tag);
 
             if (lastPage < page && lastPage != 0)
             {
                 return this.RedirectToAction(nameof(this.AllWithTag), new { page = 1, tag });
             }
 
-            var viewModel = await this.exerciseService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime>(page, ElementsPerPage, tag, x => x.CreatedOn);
+            var viewModel = await this.exercisesService.GetPublishedExercisesWithTagAsync<ExerciseListItemViewModel, System.DateTime?>(page, ElementsPerPage, tag, x => x.ModifiedOn);
 
             this.ViewData[CurrentPageKey] = page;
             this.ViewData[TagKey] = tag;
@@ -85,7 +85,7 @@
 
             string creatorId = this.userManager.GetUserId(this.User);
 
-            string exerciseId = await this.exerciseService.CreateAsync(inputModel, creatorId);
+            string exerciseId = await this.exercisesService.CreateAsync(inputModel, creatorId);
 
             this.TempData[InfoMessageKey] = CreatedSuccessfully;
 
@@ -94,7 +94,7 @@
 
         public async Task<IActionResult> Details(string exerciseId)
         {
-            var viewModel = await this.exerciseService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
+            var viewModel = await this.exercisesService.GetExerciseAsync<ExerciseViewModel>(exerciseId);
 
             if (viewModel == null)
             {
@@ -103,7 +103,7 @@
             }
 
             var accessor = await this.userManager.GetUserAsync(this.User);
-            bool isAccessorCreator = await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessor.Id);
+            bool isAccessorCreator = await this.exercisesService.IsUserExerciseCreatorAsync(exerciseId, accessor.Id);
 
             // If user is not the creator of the exercise when it's not published, he/she cannot access that page.
             if (!viewModel.IsPublished && !isAccessorCreator && !this.User.IsInRole(AdministratorRoleName))
@@ -113,7 +113,7 @@
             }
 
             viewModel.IsAcessorCreator = isAccessorCreator;
-            viewModel.ExerciseReviewUserRating = await this.reviewService.GetExerciseReviewRatingAsync(exerciseId, accessor.Id);
+            viewModel.ExerciseReviewUserRating = await this.reviewsService.GetExerciseReviewRatingAsync(exerciseId, accessor.Id);
 
             return this.View(viewModel);
         }
@@ -122,13 +122,13 @@
         {
             var accessorId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, accessorId))
+            if (!await this.exercisesService.IsUserExerciseCreatorAsync(exerciseId, accessorId))
             {
                 this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
-            await this.exerciseService.ChangePublishState(exerciseId);
+            await this.exercisesService.ChangePublishState(exerciseId);
 
             this.TempData[InfoMessageKey] = ChangesSavedSuccessfully;
 
@@ -139,13 +139,13 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(exerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
+            if (!await this.exercisesService.IsUserExerciseCreatorAsync(exerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
             {
                 this.TempData[ErrorMessageKey] = InvalidExercise;
                 return this.RedirectToAction(nameof(this.Browse));
             }
 
-            await this.exerciseService.DeleteExerciseAsync(exerciseId);
+            await this.exercisesService.DeleteExerciseAsync(exerciseId);
 
             this.TempData[InfoMessageKey] = DeletedSuccessfully;
 

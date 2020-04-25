@@ -18,14 +18,14 @@
     [Route("/api/{controller}")]
     public class TagsController : ControllerBase
     {
-        private readonly ITagService tagService;
-        private readonly IExerciseService exerciseService;
+        private readonly ITagsService tagsService;
+        private readonly IExercisesService exercisesService;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public TagsController(ITagService tagService, IExerciseService exerciseService, UserManager<ApplicationUser> userManager)
+        public TagsController(ITagsService tagService, IExercisesService exerciseService, UserManager<ApplicationUser> userManager)
         {
-            this.tagService = tagService;
-            this.exerciseService = exerciseService;
+            this.tagsService = tagService;
+            this.exercisesService = exerciseService;
             this.userManager = userManager;
         }
 
@@ -34,17 +34,17 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId))
+            if (!await this.exercisesService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId))
             {
                 return this.BadRequest();
             }
 
-            if (await this.tagService.ExerciseTagExistsAsync(inputModel.ExerciseId, inputModel.TagName))
+            if (await this.tagsService.ExerciseTagExistsAsync(inputModel.ExerciseId, inputModel.TagName))
             {
                 return this.BadRequest();
             }
 
-            var result = await this.tagService.CreateExerciseTagAsync<TagViewModel>(inputModel.ExerciseId, inputModel.TagName);
+            var result = await this.tagsService.CreateExerciseTagAsync<TagViewModel>(inputModel.ExerciseId, inputModel.TagName);
 
             return this.Created($"api/Tags/Exercise", result);
         }
@@ -54,17 +54,17 @@
         {
             var userId = this.userManager.GetUserId(this.User);
 
-            if (!await this.exerciseService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
+            if (!await this.exercisesService.IsUserExerciseCreatorAsync(inputModel.ExerciseId, userId) && !this.User.IsInRole(AdministratorRoleName))
             {
                 return this.BadRequest();
             }
 
-            if (!await this.tagService.ExerciseTagExistsAsync(inputModel.ExerciseId, inputModel.TagId))
+            if (!await this.tagsService.ExerciseTagExistsAsync(inputModel.ExerciseId, inputModel.TagId))
             {
                 return this.BadRequest();
             }
 
-            await this.tagService.DeleteExerciseTagAsync(inputModel);
+            await this.tagsService.DeleteExerciseTagAsync(inputModel);
 
             return this.Ok();
         }

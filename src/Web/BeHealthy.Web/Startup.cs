@@ -78,13 +78,13 @@
             services.AddScoped<IDbQueryRunner, DbQueryRunner>();
 
             // Application services
-            services.AddTransient<IExerciseService, ExerciseService>();
-            services.AddTransient<IExerciseStepService, ExerciseStepService>();
-            services.AddTransient<ITagService, TagService>();
+            services.AddTransient<IExercisesService, ExercisesService>();
+            services.AddTransient<IExerciseStepsService, ExerciseStepsService>();
+            services.AddTransient<ITagsService, TagsService>();
             services.AddTransient<IRatingsService, RatingsService>();
-            services.AddTransient<IWorkoutService, WorkoutService>();
-            services.AddTransient<IWorkoutExerciseService, WorkoutExerciseService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IWorkoutsService, WorkoutsService>();
+            services.AddTransient<IWorkoutExercisesService, WorkoutExercisesService>();
+            services.AddTransient<IUsersService, UsersService>();
 
             var sendGridEmailSender = new SendGridEmailSender(
                 this.configuration["SendGrid:ApiKey"],
